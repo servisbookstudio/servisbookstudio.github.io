@@ -647,6 +647,9 @@
   });
 
   // Sidebar click — otvori sekciju i scrolluj na vrh
+  let sidebarScrolling = false;
+  let sidebarScrollTimer;
+
   document.querySelectorAll('.sidebar-link').forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
@@ -654,23 +657,36 @@
       const target = document.getElementById(targetId);
       if (!target) return;
       sections.forEach(s => s.classList.toggle('open', s === target));
+
+      sidebarScrolling = true;
+      clearTimeout(sidebarScrollTimer);
       setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+
       document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
       this.classList.add('active');
+
+      sidebarScrollTimer = setTimeout(() => { sidebarScrolling = false; }, 1000);
     });
   });
 
-  // Sidebar active link on scroll
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
-        if (link) link.classList.add('active');
-      }
+  // Sidebar active link on scroll — sekcija čiji je vrh najbliži nav dnu
+  function updateSidebarActive() {
+    if (sidebarScrolling) return;
+    const navH = 80;
+    let closest = null;
+    let closestDist = Infinity;
+    sections.forEach(s => {
+      if (s.classList.contains('hidden')) return;
+      const dist = Math.abs(s.getBoundingClientRect().top - navH);
+      if (dist < closestDist) { closestDist = dist; closest = s; }
     });
-  }, { threshold: 0.3 });
-  sections.forEach(s => observer.observe(s));
+    if (closest) {
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.sidebar-link[href="#${closest.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  }
+  window.addEventListener('scroll', updateSidebarActive, { passive: true });
 </script>
 </body>
 </html>
