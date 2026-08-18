@@ -1101,14 +1101,14 @@ gallery.addEventListener('lostpointercapture', e => {
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxClose = document.getElementById('lightbox-close');
-document.querySelectorAll('.phone-frame img').forEach(img => {
-  img.addEventListener('click', e => {
-    if (gallery.hasAttribute('data-dragging')) return;
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
+gallery.addEventListener('click', e => {
+  if (gallery.dataset.dragging) return;
+  const img = e.target.closest('.phone-frame img');
+  if (!img) return;
+  lightboxImg.src = img.src;
+  lightboxImg.alt = img.alt;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
 });
 function closeLightbox() {
   lightbox.classList.remove('open');
