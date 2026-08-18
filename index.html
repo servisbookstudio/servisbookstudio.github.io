@@ -216,6 +216,7 @@
     .gallery-wrap {
       overflow-x: auto; padding: 16px 0 24px;
       scroll-snap-type: x mandatory;
+      user-select: none;
       -webkit-overflow-scrolling: touch;
       display: flex; gap: 16px; cursor: grab;
     }
@@ -496,31 +497,31 @@
     <p class="gallery-hint">← Scroll →</p>
     <div class="gallery-wrap" id="gallery">
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/1.jpg" alt="Service Records" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/1.jpg" alt="Service Records" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_1">Service Records</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/2.jpg" alt="Calendar" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/2.jpg" alt="Calendar" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_2">Calendar</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/4.jpg" alt="Reminders" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/4.jpg" alt="Reminders" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_4">Reminders</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/6.jpg" alt="Service Details" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/6.jpg" alt="Service Details" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_6">Service Details</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/3.jpg" alt="Statistics" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/3.jpg" alt="Statistics" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_3">Statistics ⭐</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/5.jpg" alt="Working Hours" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/5.jpg" alt="Working Hours" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_5">Working Hours</div>
       </div>
       <div class="gallery-item">
-        <div class="phone-frame"><img src="assets/7.jpg" alt="Settings" loading="lazy"></div>
+        <div class="phone-frame"><img draggable="false" src="assets/7.jpg" alt="Settings" loading="lazy"></div>
         <div class="gallery-caption" data-i18n="cap_7">Settings</div>
       </div>
     </div>
@@ -995,7 +996,7 @@ video.addEventListener('click', () => { if (!video.paused) { video.pause(); } })
 // Gallery drag scroll
 const gallery = document.getElementById('gallery');
 let isDown = false, startX, scrollLeft;
-gallery.addEventListener('mousedown', e => { isDown = true; gallery.style.cursor = 'grabbing'; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
+gallery.addEventListener('mousedown', e => { e.preventDefault(); isDown = true; gallery.style.cursor = 'grabbing'; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
 gallery.addEventListener('mouseleave', () => { isDown = false; gallery.style.cursor = 'grab'; });
 gallery.addEventListener('mouseup', () => { isDown = false; gallery.style.cursor = 'grab'; });
 gallery.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); gallery.scrollLeft = scrollLeft - (e.pageX - gallery.offsetLeft - startX); });
