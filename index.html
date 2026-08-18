@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ServisBook</title>
+  <meta name="description" content="Workshop management app for service businesses. Track appointments, clients, reminders and statistics — all stored privately on your device.">
+  <style>
+    :root {
+      --bg: #f8faff; --bg-alt: #eef2fb; --nav-bg: rgba(255,255,255,0.96);
+      --text: #1a2333; --text-muted: #4a5568; --border: #dde6f3;
+      --primary: #0D47A1; --primary-l: #1565C0; --primary-xl: #1976D2;
+      --accent: #42A5F5; --gold: #F9A825; --gold-bg: #fffbf0; --gold-border: #ffe082;
+      --card: #ffffff;
+      --shadow-sm: 0 2px 8px rgba(13,71,161,.07);
+      --shadow: 0 8px 32px rgba(13,71,161,.10);
+      --shadow-lg: 0 16px 64px rgba(13,71,161,.14);
+      --r: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0a1628; --bg-alt: #0d1f38; --nav-bg: rgba(10,22,40,.96);
+        --text: #dde8f4; --text-muted: #7a9ab5; --border: #1a3355;
+        --card: #0f1e35; --gold-bg: #1c1500; --gold-border: #3d2e00;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,.25);
+        --shadow: 0 8px 32px rgba(0,0,0,.35);
+        --shadow-lg: 0 16px 64px rgba(0,0,0,.45);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0a1628; --bg-alt: #0d1f38; --nav-bg: rgba(10,22,40,.96);
+      --text: #dde8f4; --text-muted: #7a9ab5; --border: #1a3355;
+      --card: #0f1e35; --gold-bg: #1c1500; --gold-border: #3d2e00;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.25);
+      --shadow: 0 8px 32px rgba(0,0,0,.35);
+      --shadow-lg: 0 16px 64px rgba(0,0,0,.45);
+    }
+    :root[data-theme="light"] {
+      --bg: #f8faff; --bg-alt: #eef2fb; --nav-bg: rgba(255,255,255,.96);
+      --text: #1a2333; --text-muted: #4a5568; --border: #dde6f3;
+      --card: #ffffff; --gold-bg: #fffbf0; --gold-border: #ffe082;
+      --shadow-sm: 0 2px 8px rgba(13,71,161,.07);
+      --shadow: 0 8px 32px rgba(13,71,161,.10);
+      --shadow-lg: 0 16px 64px rgba(13,71,161,.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+    img { max-width: 100%; display: block; }
+    a { color: var(--primary-xl); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 60px; gap: 16px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-logo span { font-weight: 700; font-size: 17px; color: var(--primary); }
+    .nav-links { display: none; gap: 4px; }
+    .nav-links a {
+      padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500;
+      color: var(--text-muted); text-decoration: none; transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: var(--bg-alt); color: var(--primary); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+
+    /* Language selector */
+    .lang-wrap { position: relative; }
+    .lang-btn {
+      background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 10px; cursor: pointer; font-size: 13px; color: var(--text);
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .lang-btn:hover { border-color: var(--primary-xl); }
+    .lang-dropdown {
+      display: none; position: absolute; right: 0; top: calc(100% + 6px);
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      box-shadow: var(--shadow); min-width: 160px; overflow: hidden; z-index: 200;
+    }
+    .lang-dropdown.open { display: block; }
+    .lang-option {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 14px; cursor: pointer; font-size: 13px;
+      color: var(--text); transition: background .1s;
+    }
+    .lang-option:hover { background: var(--bg-alt); }
+    .lang-option.active { color: var(--primary); font-weight: 600; }
+
+    /* Hamburger */
+    .hamburger {
+      background: none; border: none; cursor: pointer; padding: 6px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text); border-radius: 2px; transition: transform .2s, opacity .2s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .mobile-nav {
+      display: none; flex-direction: column; gap: 2px;
+      padding: 8px 16px 16px; border-top: 1px solid var(--border);
+      background: var(--nav-bg);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      padding: 10px 14px; border-radius: 8px; color: var(--text);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+    }
+    .mobile-nav a:hover { background: var(--bg-alt); }
+
+    /* Theme toggle */
+    .theme-btn {
+      background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px;
+      width: 34px; height: 34px; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-btn:hover { border-color: var(--primary-xl); }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-xl) 100%);
+      color: #fff; overflow: hidden;
+    }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 48px 20px 0; gap: 32px;
+    }
+    .hero-text { text-align: center; }
+    .hero-eyebrow {
+      display: inline-block; background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 20px;
+      padding: 4px 14px; font-size: 12px; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 6vw, 46px); font-weight: 800;
+      line-height: 1.15; margin-bottom: 16px; text-wrap: balance;
+    }
+    .hero-desc {
+      font-size: 16px; opacity: .88; max-width: 520px;
+      margin: 0 auto 28px; line-height: 1.65;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .btn-play {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; color: var(--primary);
+      border-radius: 12px; padding: 12px 22px;
+      font-weight: 700; font-size: 15px; text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: transform .15s, box-shadow .15s;
+    }
+    .btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); text-decoration: none; }
+    .btn-play svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .hero-banner {
+      width: 100%; max-width: 640px;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,.2);
+    }
+
+    /* SECTIONS */
+    .section { padding: 64px 20px; }
+    .section-alt { background: var(--bg-alt); }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-header h2 {
+      font-size: clamp(22px, 4vw, 32px); font-weight: 800;
+      color: var(--text); margin-bottom: 10px; text-wrap: balance;
+    }
+    .section-header p { color: var(--text-muted); max-width: 520px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-block; color: var(--primary-xl);
+      font-size: 12px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    /* FEATURES GRID */
+    .features-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 18px 16px;
+      box-shadow: var(--shadow-sm); transition: transform .15s, box-shadow .15s;
+    }
+    .feat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .feat-icon { font-size: 24px; margin-bottom: 8px; }
+    .feat-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+    .premium-grid .feat-card {
+      border-color: var(--gold-border); background: var(--gold-bg);
+    }
+    .premium-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--gold); color: #5c3d00;
+      font-size: 10px; font-weight: 700; border-radius: 6px;
+      padding: 2px 7px; margin-bottom: 10px; letter-spacing: .04em;
+    }
+
+    /* SCREENSHOTS */
+    .gallery-wrap {
+      overflow-x: auto; padding: 16px 0 24px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 16px; cursor: grab;
+    }
+    .gallery-wrap:active { cursor: grabbing; }
+    .phone-frame {
+      flex-shrink: 0; width: 160px;
+      border-radius: 24px; border: 3px solid var(--border);
+      overflow: hidden; box-shadow: var(--shadow);
+      scroll-snap-align: start; background: var(--card);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .phone-frame:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-lg); }
+    .phone-frame img { width: 100%; display: block; }
+    .gallery-caption {
+      text-align: center; margin-top: 8px;
+      font-size: 11px; color: var(--text-muted); font-weight: 500;
+    }
+    .gallery-item { display: flex; flex-direction: column; align-items: center; }
+
+    /* VIDEO */
+    .video-wrap {
+      position: relative; border-radius: 16px; overflow: hidden;
+      box-shadow: var(--shadow-lg); max-width: 480px; margin: 0 auto;
+      background: #000;
+    }
+    .video-wrap video { width: 100%; display: block; }
+    .video-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.3); transition: opacity .2s; cursor: pointer;
+    }
+    .video-overlay.hidden { opacity: 0; pointer-events: none; }
+    .play-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,.95); display: flex;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+    .play-circle svg { width: 28px; height: 28px; margin-left: 4px; }
+
+    /* PREMIUM COMPARE */
+    .compare-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      max-width: 680px; margin: 0 auto;
+    }
+    .compare-card {
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 16px; padding: 24px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .compare-card.premium {
+      border-color: var(--gold); background: var(--gold-bg);
+    }
+    .compare-title {
+      font-size: 18px; font-weight: 800; margin-bottom: 4px; color: var(--text);
+    }
+    .compare-card.premium .compare-title { color: #92400e; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .compare-card.premium .compare-title { color: var(--gold); }
+    }
+    :root[data-theme="dark"] .compare-card.premium .compare-title { color: var(--gold); }
+    .compare-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+    .compare-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .compare-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+    .check { color: #16a34a; font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .compare-card.premium .check { color: #d97706; }
+
+    /* GUIDE TEASER */
+    .guide-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-xl) 100%);
+      border-radius: 20px; padding: 40px 32px; text-align: center; color: #fff;
+      box-shadow: var(--shadow-lg); max-width: 640px; margin: 0 auto;
+    }
+    .guide-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .guide-card p { opacity: .88; margin-bottom: 24px; font-size: 15px; }
+    .btn-outline-white {
+      display: inline-block; border: 2px solid rgba(255,255,255,.7);
+      color: #fff; padding: 10px 24px; border-radius: 10px;
+      font-weight: 600; font-size: 15px; text-decoration: none;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,.15); border-color: #fff; text-decoration: none; }
+
+    /* FOOTER */
+    .footer {
+      background: var(--primary); color: rgba(255,255,255,.85);
+      padding: 40px 20px;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 24px; align-items: center;
+      text-align: center;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; }
+    .footer-logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .footer-logo span { font-weight: 700; font-size: 17px; color: #fff; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; }
+    .footer-links a { color: rgba(255,255,255,.75); font-size: 13px; text-decoration: none; }
+    .footer-links a:hover { color: #fff; text-decoration: underline; }
+    .footer-copy { font-size: 12px; opacity: .6; }
+
+    /* RESPONSIVE */
+    @media (min-width: 600px) {
+      .features-grid { grid-template-columns: repeat(3, 1fr); }
+      .phone-frame { width: 180px; }
+    }
+    @media (min-width: 768px) {
+      .nav-links { display: flex; }
+      .hamburger { display: none; }
+      .hero-inner { flex-direction: row; align-items: flex-end; padding: 64px 20px 0; }
+      .hero-text { text-align: left; flex: 1; }
+      .hero-cta { justify-content: flex-start; }
+      .hero-desc { margin-left: 0; }
+      .hero-banner { max-width: 480px; flex-shrink: 0; }
+      .features-grid { grid-template-columns: repeat(4, 1fr); }
+      .phone-frame { width: 200px; }
+    }
+    @media (min-width: 1024px) {
+      .compare-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Scroll indicator for gallery */
+    .gallery-hint {
+      text-align: center; color: var(--text-muted);
+      font-size: 12px; margin-bottom: 8px; opacity: .7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <img src="assets/logo.png" alt="ServisBook">
+      <span>ServisBook</span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="guide.html" data-i18n="nav_guide">User Guide</a>
+      <a href="#premium" data-i18n="nav_premium">Premium</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-wrap">
+        <button class="lang-btn" id="lang-btn" aria-label="Language">🌐 <span id="lang-label">EN</span> ▾</button>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <div class="lang-option" data-lang="en">🇬🇧 English</div>
+          <div class="lang-option" data-lang="sr">🇷🇸 Srpski</div>
+          <div class="lang-option" data-lang="de">🇩🇪 Deutsch</div>
+          <div class="lang-option" data-lang="fr">🇫🇷 Français</div>
+          <div class="lang-option" data-lang="es">🇪🇸 Español</div>
+          <div class="lang-option" data-lang="it">🇮🇹 Italiano</div>
+          <div class="lang-option" data-lang="pt">🇵🇹 Português</div>
+          <div class="lang-option" data-lang="nl">🇳🇱 Nederlands</div>
+          <div class="lang-option" data-lang="pl">🇵🇱 Polski</div>
+          <div class="lang-option" data-lang="hr">🇭🇷 Hrvatski</div>
+        </div>
+      </div>
+      <button class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Toggle dark mode">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#features" data-i18n="nav_features">Features</a>
+    <a href="guide.html" data-i18n="nav_guide">User Guide</a>
+    <a href="#premium" data-i18n="nav_premium">Premium</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow" data-i18n="hero_eyebrow">Workshop Management App</div>
+      <h1 data-i18n="hero_tagline">Workshop Management,<br>Simplified</h1>
+      <p class="hero-desc" data-i18n="hero_desc">ServisBook keeps your service records, clients, appointments and reminders in one place — all stored privately on your device.</p>
+      <div class="hero-cta">
+        <a class="btn-play" href="https://play.google.com/store/apps/details?id=com.servisbook.app" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.38.21.82.22 1.22.03l13.04-7.53-2.87-2.87L3.18 23.76zM20.7 10.37l-2.87-1.66-3.22 3.22 3.22 3.22 2.9-1.67c.83-.48.83-1.63-.03-2.11zM1.74.28C1.45.59 1.28 1.06 1.28 1.67v20.66c0 .61.17 1.08.46 1.39l.07.07 11.57-11.57v-.27L1.81.21l-.07.07zM15.57 7.72l-3.22-3.22L.74.27C.35.07-.09.09.28.3l13.42 13.42 1.87-1.87z"/></svg>
+          <span data-i18n="hero_cta">Get it on Google Play</span>
+        </a>
+      </div>
+    </div>
+    <img class="hero-banner" src="assets/banner.png" alt="ServisBook — Workshop Management App">
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="eyebrow" data-i18n="eyebrow_free">Free</div>
+      <h2 data-i18n="section_features">Everything you need</h2>
+      <p data-i18n="section_features_sub">Core tools for running your service business, at no cost.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">📋</div>
+        <div class="feat-title" data-i18n="feat_records_title">Service Records</div>
+        <div class="feat-desc" data-i18n="feat_records_desc">Three-status workflow: Scheduled → In Progress → Completed. Color-coded cards, search and sort by date, price or client.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">👥</div>
+        <div class="feat-title" data-i18n="feat_clients_title">Client Management</div>
+        <div class="feat-desc" data-i18n="feat_clients_desc">Client database with full service history, appointment count and total earnings. Import directly from phone contacts.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📅</div>
+        <div class="feat-title" data-i18n="feat_calendar_title">Calendar</div>
+        <div class="feat-desc" data-i18n="feat_calendar_desc">Monthly overview and daily timeline with free and busy slots. Tap a free slot to book a new appointment instantly.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔔</div>
+        <div class="feat-title" data-i18n="feat_reminders_title">Reminders</div>
+        <div class="feat-desc" data-i18n="feat_reminders_desc">5 types: Call, SMS, Offer, Schedule next service, Personal note. One tap opens phone, SMS or email app.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title" data-i18n="feat_search_title">Search &amp; Filter</div>
+        <div class="feat-desc" data-i18n="feat_search_desc">Real-time search by client name or description. Filter by date range and workstation.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title" data-i18n="feat_sms_title">SMS Confirmation</div>
+        <div class="feat-desc" data-i18n="feat_sms_desc">Send appointment confirmation or cancellation SMS to clients directly from the app with one tap.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📄</div>
+        <div class="feat-title" data-i18n="feat_pdf_title">PDF &amp; Share</div>
+        <div class="feat-desc" data-i18n="feat_pdf_desc">Generate a service details PDF with your company data and share it via email, messaging or print.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-title" data-i18n="feat_lang_title">10 Languages</div>
+        <div class="feat-desc" data-i18n="feat_lang_desc">English, Serbian, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Croatian.</div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:48px; margin-bottom:24px;">
+      <div class="eyebrow" data-i18n="eyebrow_premium">⭐ Premium</div>
+      <h2 data-i18n="section_premium_features">Advanced tools for growing businesses</h2>
+    </div>
+    <div class="features-grid premium-grid">
+      <div class="feat-card">
+        <div class="premium-badge">⭐ PREMIUM</div>
+        <div class="feat-title" data-i18n="feat_invoice_title">Invoice Mode</div>
+        <div class="feat-desc" data-i18n="feat_invoice_desc">Line-item service records with quantity, unit price and automatic VAT calculation. Generate professional PDF invoices.</div>
+      </div>
+      <div class="feat-card">
+        <div class="premium-badge">⭐ PREMIUM</div>
+        <div class="feat-title" data-i18n="feat_stats_title">Visual Statistics</div>
+        <div class="feat-desc" data-i18n="feat_stats_desc">12+ charts: revenue trends, top clients, busiest days, average service value, new vs. loyal clients and more.</div>
+      </div>
+      <div class="feat-card">
+        <div class="premium-badge">⭐ PREMIUM</div>
+        <div class="feat-title" data-i18n="feat_backup_title">Backup &amp; Restore</div>
+        <div class="feat-desc" data-i18n="feat_backup_desc">Export all your data to a file and restore it on any device. Never lose your business history.</div>
+      </div>
+      <div class="feat-card">
+        <div class="premium-badge">⭐ PREMIUM</div>
+        <div class="feat-title" data-i18n="feat_unlimited_title">Unlimited</div>
+        <div class="feat-desc" data-i18n="feat_unlimited_desc">No limits on the number of clients or service records. Scale your business without restrictions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="section section-alt" id="screenshots">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 data-i18n="section_screenshots">See it in action</h2>
+    </div>
+    <p class="gallery-hint">← Scroll →</p>
+    <div class="gallery-wrap" id="gallery">
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/1.jpg" alt="Service Records" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_1">Service Records</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/2.jpg" alt="Calendar" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_2">Calendar</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/4.jpg" alt="Reminders" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_4">Reminders</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/6.jpg" alt="Service Details" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_6">Service Details</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/3.jpg" alt="Statistics" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_3">Statistics ⭐</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/5.jpg" alt="Working Hours" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_5">Working Hours</div>
+      </div>
+      <div class="gallery-item">
+        <div class="phone-frame"><img src="assets/7.jpg" alt="Settings" loading="lazy"></div>
+        <div class="gallery-caption" data-i18n="cap_7">Settings</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="section" id="video">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 data-i18n="section_video">Watch the demo</h2>
+    </div>
+    <div class="video-wrap">
+      <video id="demo-video" src="assets/sb_video.mp4" playsinline preload="metadata"></video>
+      <div class="video-overlay" id="video-overlay">
+        <div class="play-circle">
+          <svg viewBox="0 0 24 24" fill="#0D47A1"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM COMPARE -->
+<section class="section section-alt" id="premium">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 data-i18n="section_premium">Go Premium</h2>
+      <p data-i18n="section_premium_sub">Upgrade in-app via Google Play subscription — monthly or yearly.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-title" data-i18n="free_label">Free</div>
+        <div class="compare-sub" data-i18n="free_sub">Everything to get started</div>
+        <ul class="compare-list">
+          <li><span class="check">✓</span><span data-i18n="cmp_records">Service records</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_clients">Client management</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_calendar">Calendar &amp; scheduling</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_reminders">Reminders (5 types)</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_sms">SMS confirmation</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_pdf">PDF export</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_lang">10 languages</span></li>
+        </ul>
+      </div>
+      <div class="compare-card premium">
+        <div class="premium-badge">⭐ PREMIUM</div>
+        <div class="compare-title" data-i18n="premium_label">Premium</div>
+        <div class="compare-sub" data-i18n="premium_sub">Everything in Free, plus:</div>
+        <ul class="compare-list">
+          <li><span class="check">✓</span><span data-i18n="cmp_invoice">Invoice mode with VAT</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_stats">Visual statistics (12+ charts)</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_backup">Backup &amp; restore</span></li>
+          <li><span class="check">✓</span><span data-i18n="cmp_unlimited">Unlimited clients &amp; records</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE TEASER -->
+<section class="section" id="guide-teaser">
+  <div class="section-inner">
+    <div class="guide-card">
+      <h3 data-i18n="section_guide">User Guide</h3>
+      <p data-i18n="guide_teaser">Detailed step-by-step instructions for every feature — from getting started to advanced Premium tools.</p>
+      <a href="guide.html" class="btn-outline-white" data-i18n="guide_cta">Read the full guide →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="assets/logo.png" alt="ServisBook">
+      <span>ServisBook</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://servisbookstudio.github.io/servisbook-legal/" target="_blank">Privacy Policy</a>
+      <a href="https://servisbookstudio.github.io/servisbook-legal/terms.html" target="_blank">EULA</a>
+      <a href="https://servisbookstudio.github.io/servisbook-legal/delete-account.html" target="_blank">Delete Account</a>
+      <a href="mailto:servisbook.studio@gmail.com">servisbook.studio@gmail.com</a>
+    </div>
+    <div class="footer-copy">© 2026 Branislav Krstić. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+const T = {
+  en: {
+    nav_features:'Features', nav_guide:'User Guide', nav_premium:'Premium', nav_contact:'Contact',
+    hero_eyebrow:'Workshop Management App',
+    hero_tagline:'Workshop Management, Simplified',
+    hero_desc:'ServisBook keeps your service records, clients, appointments and reminders in one place — all stored privately on your device.',
+    hero_cta:'Get it on Google Play',
+    eyebrow_free:'Free', eyebrow_premium:'⭐ Premium',
+    section_features:'Everything you need', section_features_sub:'Core tools for running your service business, at no cost.',
+    section_premium_features:'Advanced tools for growing businesses',
+    section_screenshots:'See it in action',
+    section_video:'Watch the demo',
+    section_premium:'Go Premium', section_premium_sub:'Upgrade in-app via Google Play subscription — monthly or yearly.',
+    section_guide:'User Guide', guide_teaser:'Detailed step-by-step instructions for every feature — from getting started to advanced Premium tools.', guide_cta:'Read the full guide →',
+    feat_records_title:'Service Records', feat_records_desc:'Three-status workflow: Scheduled → In Progress → Completed. Color-coded cards, search and sort.',
+    feat_clients_title:'Client Management', feat_clients_desc:'Client database with full service history and total earnings. Import from phone contacts.',
+    feat_calendar_title:'Calendar', feat_calendar_desc:'Monthly overview and daily timeline. Tap a free slot to book instantly.',
+    feat_reminders_title:'Reminders', feat_reminders_desc:'5 types: Call, SMS, Offer, Schedule service, Personal note. One tap opens the right app.',
+    feat_search_title:'Search & Filter', feat_search_desc:'Real-time search by client or description. Filter by date and workstation.',
+    feat_sms_title:'SMS Confirmation', feat_sms_desc:'Send appointment confirmations to clients directly from the app with one tap.',
+    feat_pdf_title:'PDF & Share', feat_pdf_desc:'Generate a service details PDF and share via email, messaging or print.',
+    feat_lang_title:'10 Languages', feat_lang_desc:'English, Serbian, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Croatian.',
+    feat_invoice_title:'Invoice Mode', feat_invoice_desc:'Line-item records with quantity, unit price and automatic VAT calculation.',
+    feat_stats_title:'Visual Statistics', feat_stats_desc:'12+ charts: revenue trends, top clients, busiest days, average service value and more.',
+    feat_backup_title:'Backup & Restore', feat_backup_desc:'Export all data to a file and restore it on any device.',
+    feat_unlimited_title:'Unlimited', feat_unlimited_desc:'No limits on clients or service records. Scale without restrictions.',
+    free_label:'Free', free_sub:'Everything to get started',
+    premium_label:'Premium', premium_sub:'Everything in Free, plus:',
+    cmp_records:'Service records', cmp_clients:'Client management', cmp_calendar:'Calendar & scheduling',
+    cmp_reminders:'Reminders (5 types)', cmp_sms:'SMS confirmation', cmp_pdf:'PDF export', cmp_lang:'10 languages',
+    cmp_invoice:'Invoice mode with VAT', cmp_stats:'Visual statistics (12+ charts)', cmp_backup:'Backup & restore', cmp_unlimited:'Unlimited clients & records',
+    cap_1:'Service Records', cap_2:'Calendar', cap_3:'Statistics ⭐', cap_4:'Reminders', cap_5:'Working Hours', cap_6:'Service Details', cap_7:'Settings',
+  },
+  sr: {
+    nav_features:'Mogućnosti', nav_guide:'Uputstvo', nav_premium:'Premium', nav_contact:'Kontakt',
+    hero_eyebrow:'Aplikacija za servisne radionice',
+    hero_tagline:'Upravljanje servisom, jednostavno',
+    hero_desc:'ServisBook čuva vaše usluge, klijente, termine i podsetnike na jednom mestu — sve privatno na vašem uređaju.',
+    hero_cta:'Preuzmi na Google Play',
+    eyebrow_free:'Besplatno', eyebrow_premium:'⭐ Premium',
+    section_features:'Sve što vam treba', section_features_sub:'Osnovi alati za vaš servisni biznis, besplatno.',
+    section_premium_features:'Napredni alati za razvoj poslovanja',
+    section_screenshots:'Pogledajte aplikaciju',
+    section_video:'Pogledajte demo',
+    section_premium:'Premium plan', section_premium_sub:'Nadogradite unutar aplikacije putem Google Play pretplate — mesečno ili godišnje.',
+    section_guide:'Uputstvo za upotrebu', guide_teaser:'Detaljna uputstva korak po korak za svaku funkciju aplikacije.', guide_cta:'Pročitajte celo uputstvo →',
+    feat_records_title:'Evidencija usluga', feat_records_desc:'Tri statusa: Zakazano → U toku → Završeno. Kartice u bojama, pretraga i sortiranje.',
+    feat_clients_title:'Upravljanje klijentima', feat_clients_desc:'Baza klijenata sa istorijom usluga i zaradama. Uvoz iz kontakata telefona.',
+    feat_calendar_title:'Kalendar', feat_calendar_desc:'Mesečni pregled i dnevni raspored. Tapnite slobodan termin za brzo zakazivanje.',
+    feat_reminders_title:'Podsetnici', feat_reminders_desc:'5 vrsta: Poziv, SMS, Ponuda, Zakazivanje, Lična beleška. Jedan tap otvara pravu aplikaciju.',
+    feat_search_title:'Pretraga i filtriranje', feat_search_desc:'Pretraga u realnom vremenu. Filtriranje po datumu i radnom mestu.',
+    feat_sms_title:'SMS potvrda', feat_sms_desc:'Pošaljite SMS potvrdu termina klijentu jednim tapovm.',
+    feat_pdf_title:'PDF i deljenje', feat_pdf_desc:'Generisanje PDF radnog naloga i deljenje putem emaila ili štampanja.',
+    feat_lang_title:'10 jezika', feat_lang_desc:'Srpski, engleski, nemački, francuski, španski, italijanski, portugalski, holandski, poljski, hrvatski.',
+    feat_invoice_title:'Premium unos', feat_invoice_desc:'Stavke sa količinom, jediničnom cenom i automatskim obračunom PDV-a.',
+    feat_stats_title:'Vizuelne statistike', feat_stats_desc:'12+ grafikona: prihodi, top klijenti, najopterećeniji dani, prosečna vrednost usluge.',
+    feat_backup_title:'Backup i obnavljanje', feat_backup_desc:'Izvezite sve podatke u fajl i obnovite ih na bilo kom uređaju.',
+    feat_unlimited_title:'Neograničeno', feat_unlimited_desc:'Bez ograničenja broja klijenata ili usluga.',
+    free_label:'Besplatno', free_sub:'Sve za početak',
+    premium_label:'Premium', premium_sub:'Sve iz Besplatnog, plus:',
+    cmp_records:'Evidencija usluga', cmp_clients:'Upravljanje klijentima', cmp_calendar:'Kalendar i zakazivanje',
+    cmp_reminders:'Podsetnici (5 vrsta)', cmp_sms:'SMS potvrda', cmp_pdf:'PDF izvoz', cmp_lang:'10 jezika',
+    cmp_invoice:'Premium unos sa PDV-om', cmp_stats:'Vizuelne statistike (12+ grafikona)', cmp_backup:'Backup i obnavljanje', cmp_unlimited:'Neograničen broj klijenata i usluga',
+    cap_1:'Evidencija usluga', cap_2:'Kalendar', cap_3:'Statistike ⭐', cap_4:'Podsetnici', cap_5:'Radno vreme', cap_6:'Detalji usluge', cap_7:'Podešavanja',
+  },
+  de: {
+    nav_features:'Funktionen', nav_guide:'Benutzerhandbuch', nav_premium:'Premium', nav_contact:'Kontakt',
+    hero_eyebrow:'Werkstattverwaltungs-App',
+    hero_tagline:'Werkstattverwaltung, vereinfacht',
+    hero_desc:'ServisBook verwaltet Ihre Serviceaufträge, Kunden, Termine und Erinnerungen — alles privat auf Ihrem Gerät.',
+    hero_cta:'Jetzt bei Google Play',
+    eyebrow_free:'Kostenlos', eyebrow_premium:'⭐ Premium',
+    section_features:'Alles, was Sie brauchen', section_features_sub:'Grundlegende Werkzeuge für Ihr Servicegeschäft — kostenlos.',
+    section_premium_features:'Erweiterte Funktionen für wachsende Betriebe',
+    section_screenshots:'Die App in Aktion',
+    section_video:'Demo ansehen',
+    section_premium:'Premium werden', section_premium_sub:'In der App über Google Play abonnieren — monatlich oder jährlich.',
+    section_guide:'Benutzerhandbuch', guide_teaser:'Ausführliche Schritt-für-Schritt-Anleitungen für jede Funktion.', guide_cta:'Vollständige Anleitung lesen →',
+    feat_records_title:'Serviceaufträge', feat_records_desc:'Drei Status: Geplant → In Bearbeitung → Abgeschlossen.',
+    feat_clients_title:'Kundenverwaltung', feat_clients_desc:'Kundendatenbank mit Servicehistorie und Umsätzen.',
+    feat_calendar_title:'Kalender', feat_calendar_desc:'Monatsübersicht und Tagesansicht mit freien Zeitslots.',
+    feat_reminders_title:'Erinnerungen', feat_reminders_desc:'5 Typen: Anruf, SMS, Angebot, Termin, Persönliche Notiz.',
+    feat_search_title:'Suche & Filter', feat_search_desc:'Echtzeitsuche und Filterung nach Datum und Arbeitsplatz.',
+    feat_sms_title:'SMS-Bestätigung', feat_sms_desc:'Terminbestätigung per SMS mit einem Tipp senden.',
+    feat_pdf_title:'PDF & Teilen', feat_pdf_desc:'PDF-Servicebeleg erstellen und per E-Mail oder Druck teilen.',
+    feat_lang_title:'10 Sprachen', feat_lang_desc:'Englisch, Serbisch, Deutsch, Französisch, Spanisch, Italienisch, Portugiesisch, Niederländisch, Polnisch, Kroatisch.',
+    feat_invoice_title:'Rechnungsmodus', feat_invoice_desc:'Positionen mit Menge, Einzelpreis und automatischer MwSt-Berechnung.',
+    feat_stats_title:'Visuelle Statistiken', feat_stats_desc:'12+ Diagramme: Umsatztrends, Top-Kunden, stärkste Tage und mehr.',
+    feat_backup_title:'Backup & Wiederherstellung', feat_backup_desc:'Alle Daten exportieren und auf jedem Gerät wiederherstellen.',
+    feat_unlimited_title:'Unbegrenzt', feat_unlimited_desc:'Keine Limits bei Kunden oder Serviceaufträgen.',
+    free_label:'Kostenlos', free_sub:'Alles zum Starten',
+    premium_label:'Premium', premium_sub:'Alles aus Kostenlos, plus:',
+    cmp_records:'Serviceaufträge', cmp_clients:'Kundenverwaltung', cmp_calendar:'Kalender & Termine',
+    cmp_reminders:'Erinnerungen (5 Typen)', cmp_sms:'SMS-Bestätigung', cmp_pdf:'PDF-Export', cmp_lang:'10 Sprachen',
+    cmp_invoice:'Rechnungsmodus mit MwSt', cmp_stats:'Visuelle Statistiken (12+ Diagramme)', cmp_backup:'Backup & Wiederherstellung', cmp_unlimited:'Unbegrenzte Kunden & Aufträge',
+    cap_1:'Serviceaufträge', cap_2:'Kalender', cap_3:'Statistiken ⭐', cap_4:'Erinnerungen', cap_5:'Arbeitszeiten', cap_6:'Servicedetails', cap_7:'Einstellungen',
+  },
+  fr: {
+    nav_features:'Fonctionnalités', nav_guide:'Guide', nav_premium:'Premium', nav_contact:'Contact',
+    hero_eyebrow:"Application de gestion d’atelier",
+    hero_tagline:"Gestion d’atelier, simplifiée",
+    hero_desc:"ServisBook centralise vos fiches de service, clients, rendez-vous et rappels — tout sur votre appareil, en toute confidentialité.",
+    hero_cta:'Télécharger sur Google Play',
+    eyebrow_free:'Gratuit', eyebrow_premium:'⭐ Premium',
+    section_features:'Tout ce dont vous avez besoin', section_features_sub:'Outils essentiels pour votre activité de service — gratuits.',
+    section_premium_features:'Outils avancés pour les entreprises en croissance',
+    section_screenshots:"L’application en action", section_video:'Voir la démo',
+    section_premium:'Passer à Premium', section_premium_sub:'Abonnez-vous via Google Play — mensuel ou annuel.',
+    section_guide:"Guide d’utilisation", guide_teaser:'Instructions détaillées pour chaque fonctionnalité.', guide_cta:'Lire le guide complet →',
+    feat_records_title:'Fiches de service', feat_records_desc:'Trois statuts : Planifié → En cours → Terminé.',
+    feat_clients_title:'Gestion des clients', feat_clients_desc:'Base clients avec historique et chiffre d’affaires.',
+    feat_calendar_title:'Calendrier', feat_calendar_desc:'Vue mensuelle et planning journalier avec créneaux libres.',
+    feat_reminders_title:'Rappels', feat_reminders_desc:'5 types : Appel, SMS, Offre, Nouveau service, Note personnelle.',
+    feat_search_title:'Recherche & Filtre', feat_search_desc:'Recherche en temps réel, filtre par date et poste.',
+    feat_sms_title:'Confirmation SMS', feat_sms_desc:'Envoyez une confirmation de rendez-vous par SMS en un tap.',
+    feat_pdf_title:'PDF & Partage', feat_pdf_desc:'Générez un bon de service PDF et partagez-le.',
+    feat_lang_title:'10 langues', feat_lang_desc:'Anglais, Serbe, Allemand, Français, Espagnol, Italien, Portugais, Néerlandais, Polonais, Croate.',
+    feat_invoice_title:'Mode Facture', feat_invoice_desc:'Lignes d’article avec quantité, prix unitaire et TVA automatique.',
+    feat_stats_title:'Statistiques visuelles', feat_stats_desc:'12+ graphiques : tendances de revenus, top clients, jours de pointe.',
+    feat_backup_title:'Sauvegarde & Restauration', feat_backup_desc:'Exportez vos données et restaurez-les sur n’importe quel appareil.',
+    feat_unlimited_title:'Illimité', feat_unlimited_desc:'Aucune limite sur les clients ou les fiches.',
+    free_label:'Gratuit', free_sub:'Tout pour démarrer',
+    premium_label:'Premium', premium_sub:'Tout du Gratuit, plus :',
+    cmp_records:'Fiches de service', cmp_clients:'Gestion des clients', cmp_calendar:'Calendrier & RDV',
+    cmp_reminders:'Rappels (5 types)', cmp_sms:'Confirmation SMS', cmp_pdf:'Export PDF', cmp_lang:'10 langues',
+    cmp_invoice:'Mode Facture avec TVA', cmp_stats:'Statistiques visuelles (12+ graphiques)', cmp_backup:'Sauvegarde & Restauration', cmp_unlimited:'Clients & fiches illimités',
+    cap_1:'Fiches de service', cap_2:'Calendrier', cap_3:'Statistiques ⭐', cap_4:'Rappels', cap_5:'Horaires', cap_6:'Détails service', cap_7:'Paramètres',
+  },
+  es: {
+    nav_features:'Funciones', nav_guide:'Guía', nav_premium:'Premium', nav_contact:'Contacto',
+    hero_eyebrow:'App de gestión de taller',
+    hero_tagline:'Gestión de taller, simplificada',
+    hero_desc:'ServisBook reúne sus registros de servicio, clientes, citas y recordatorios en un solo lugar — todo almacenado de forma privada en su dispositivo.',
+    hero_cta:'Consíguelo en Google Play',
+    eyebrow_free:'Gratis', eyebrow_premium:'⭐ Premium',
+    section_features:'Todo lo que necesitas', section_features_sub:'Herramientas esenciales para tu negocio de servicio, gratis.',
+    section_premium_features:'Herramientas avanzadas para negocios en crecimiento',
+    section_screenshots:'La aplicación en acción', section_video:'Ver la demo',
+    section_premium:'Hazte Premium', section_premium_sub:'Suscríbete desde la app vía Google Play — mensual o anual.',
+    section_guide:'Guía de usuario', guide_teaser:'Instrucciones detalladas para cada función.', guide_cta:'Leer la guía completa →',
+    feat_records_title:'Registros de servicio', feat_records_desc:'Tres estados: Programado → En progreso → Completado.',
+    feat_clients_title:'Gestión de clientes', feat_clients_desc:'Base de datos con historial y ganancias.',
+    feat_calendar_title:'Calendario', feat_calendar_desc:'Vista mensual y diaria con franjas libres.',
+    feat_reminders_title:'Recordatorios', feat_reminders_desc:'5 tipos: Llamada, SMS, Oferta, Nuevo servicio, Nota personal.',
+    feat_search_title:'Buscar y Filtrar', feat_search_desc:'Búsqueda en tiempo real por cliente o descripción.',
+    feat_sms_title:'Confirmación SMS', feat_sms_desc:'Envía confirmación de cita por SMS con un toque.',
+    feat_pdf_title:'PDF y Compartir', feat_pdf_desc:'Genera un PDF del servicio y compártelo por email o imprime.',
+    feat_lang_title:'10 idiomas', feat_lang_desc:'Inglés, Serbio, Alemán, Francés, Español, Italiano, Portugués, Holandés, Polaco, Croata.',
+    feat_invoice_title:'Modo Factura', feat_invoice_desc:'Líneas con cantidad, precio unitario e IVA automático.',
+    feat_stats_title:'Estadísticas visuales', feat_stats_desc:'12+ gráficos: tendencias de ingresos, mejores clientes y más.',
+    feat_backup_title:'Copia y Restauración', feat_backup_desc:'Exporta tus datos y restáuralos en cualquier dispositivo.',
+    feat_unlimited_title:'Ilimitado', feat_unlimited_desc:'Sin límites de clientes ni registros.',
+    free_label:'Gratis', free_sub:'Todo para empezar',
+    premium_label:'Premium', premium_sub:'Todo de Gratis, más:',
+    cmp_records:'Registros de servicio', cmp_clients:'Gestión de clientes', cmp_calendar:'Calendario y citas',
+    cmp_reminders:'Recordatorios (5 tipos)', cmp_sms:'Confirmación SMS', cmp_pdf:'Exportar PDF', cmp_lang:'10 idiomas',
+    cmp_invoice:'Modo Factura con IVA', cmp_stats:'Estadísticas visuales (12+ gráficos)', cmp_backup:'Copia y Restauración', cmp_unlimited:'Clientes y registros ilimitados',
+    cap_1:'Registros de servicio', cap_2:'Calendario', cap_3:'Estadísticas ⭐', cap_4:'Recordatorios', cap_5:'Horario laboral', cap_6:'Detalles servicio', cap_7:'Ajustes',
+  },
+  it: {
+    nav_features:'Funzionalità', nav_guide:'Guida', nav_premium:'Premium', nav_contact:'Contatti',
+    hero_eyebrow:"App per la gestione dell’officina",
+    hero_tagline:"Gestione dell’officina, semplificata",
+    hero_desc:"ServisBook raccoglie ordini di servizio, clienti, appuntamenti e promemoria in un unico posto — tutto memorizzato privatamente sul tuo dispositivo.",
+    hero_cta:'Scarica su Google Play',
+    eyebrow_free:'Gratuito', eyebrow_premium:'⭐ Premium',
+    section_features:'Tutto ciò di cui hai bisogno', section_features_sub:'Strumenti essenziali per la tua attività di servizio, gratuiti.',
+    section_premium_features:'Strumenti avanzati per le imprese in crescita',
+    section_screenshots:"L’app in azione", section_video:'Guarda la demo',
+    section_premium:'Passa a Premium', section_premium_sub:'Abbonati in-app tramite Google Play — mensile o annuale.',
+    section_guide:'Guida utente', guide_teaser:'Istruzioni dettagliate per ogni funzione.', guide_cta:'Leggi la guida completa →',
+    feat_records_title:'Ordini di servizio', feat_records_desc:'Tre stati: Programmato → In corso → Completato.',
+    feat_clients_title:'Gestione clienti', feat_clients_desc:'Database clienti con storico e guadagni.',
+    feat_calendar_title:'Calendario', feat_calendar_desc:'Vista mensile e giornaliera con slot liberi.',
+    feat_reminders_title:'Promemoria', feat_reminders_desc:'5 tipi: Chiamata, SMS, Offerta, Nuovo servizio, Nota personale.',
+    feat_search_title:'Cerca e Filtra', feat_search_desc:'Ricerca in tempo reale per cliente o descrizione.',
+    feat_sms_title:'Conferma SMS', feat_sms_desc:"Invia conferma appuntamento via SMS con un tocco.",
+    feat_pdf_title:'PDF e Condivisione', feat_pdf_desc:'Genera PDF del servizio e condividilo via email o stampa.',
+    feat_lang_title:'10 lingue', feat_lang_desc:'Inglese, Serbo, Tedesco, Francese, Spagnolo, Italiano, Portoghese, Olandese, Polacco, Croato.',
+    feat_invoice_title:'Modalità Fattura', feat_invoice_desc:'Voci con quantità, prezzo unitario e IVA automatica.',
+    feat_stats_title:'Statistiche visive', feat_stats_desc:'12+ grafici: tendenze ricavi, migliori clienti, giorni più affollati.',
+    feat_backup_title:'Backup e Ripristino', feat_backup_desc:'Esporta tutti i dati e ripristinali su qualsiasi dispositivo.',
+    feat_unlimited_title:'Illimitato', feat_unlimited_desc:'Nessun limite su clienti o ordini.',
+    free_label:'Gratuito', free_sub:'Tutto per iniziare',
+    premium_label:'Premium', premium_sub:'Tutto del Gratuito, più:',
+    cmp_records:'Ordini di servizio', cmp_clients:'Gestione clienti', cmp_calendar:'Calendario e appuntamenti',
+    cmp_reminders:'Promemoria (5 tipi)', cmp_sms:'Conferma SMS', cmp_pdf:'Esporta PDF', cmp_lang:'10 lingue',
+    cmp_invoice:'Modalità Fattura con IVA', cmp_stats:'Statistiche visive (12+ grafici)', cmp_backup:'Backup e Ripristino', cmp_unlimited:'Clienti e ordini illimitati',
+    cap_1:'Ordini di servizio', cap_2:'Calendario', cap_3:'Statistiche ⭐', cap_4:'Promemoria', cap_5:'Orario lavoro', cap_6:'Dettagli servizio', cap_7:'Impostazioni',
+  },
+  pt: {
+    nav_features:'Funcionalidades', nav_guide:'Guia', nav_premium:'Premium', nav_contact:'Contato',
+    hero_eyebrow:'App de gestão de oficina',
+    hero_tagline:'Gestão de oficina, simplificada',
+    hero_desc:'ServisBook reúne seus registros de serviço, clientes, agendamentos e lembretes em um só lugar — tudo armazenado com privacidade no seu dispositivo.',
+    hero_cta:'Disponível no Google Play',
+    eyebrow_free:'Gratuito', eyebrow_premium:'⭐ Premium',
+    section_features:'Tudo o que você precisa', section_features_sub:'Ferramentas essenciais para seu negócio de serviço, grátis.',
+    section_premium_features:'Ferramentas avançadas para negócios em crescimento',
+    section_screenshots:'O app em ação', section_video:'Assistir à demo',
+    section_premium:'Seja Premium', section_premium_sub:'Assine pelo Google Play — mensal ou anual.',
+    section_guide:'Guia do usuário', guide_teaser:'Instruções detalhadas para cada função.', guide_cta:'Ler o guia completo →',
+    feat_records_title:'Registros de serviço', feat_records_desc:'Três status: Agendado → Em andamento → Concluído.',
+    feat_clients_title:'Gestão de clientes', feat_clients_desc:'Base de clientes com histórico e ganhos.',
+    feat_calendar_title:'Calendário', feat_calendar_desc:'Visão mensal e diária com slots livres.',
+    feat_reminders_title:'Lembretes', feat_reminders_desc:'5 tipos: Ligação, SMS, Oferta, Novo serviço, Nota pessoal.',
+    feat_search_title:'Pesquisar e Filtrar', feat_search_desc:'Pesquisa em tempo real por cliente ou descrição.',
+    feat_sms_title:'Confirmação SMS', feat_sms_desc:'Envie confirmação de agendamento por SMS com um toque.',
+    feat_pdf_title:'PDF e Compartilhar', feat_pdf_desc:'Gere PDF do serviço e compartilhe por e-mail ou imprima.',
+    feat_lang_title:'10 idiomas', feat_lang_desc:'Inglês, Sérvio, Alemão, Francês, Espanhol, Italiano, Português, Holandês, Polonês, Croata.',
+    feat_invoice_title:'Modo Fatura', feat_invoice_desc:'Itens com quantidade, preço unitário e cálculo automático de IVA.',
+    feat_stats_title:'Estatísticas visuais', feat_stats_desc:'12+ gráficos: tendências de receita, melhores clientes e mais.',
+    feat_backup_title:'Backup e Restauração', feat_backup_desc:'Exporte seus dados e restaure-os em qualquer dispositivo.',
+    feat_unlimited_title:'Ilimitado', feat_unlimited_desc:'Sem limites de clientes ou registros.',
+    free_label:'Gratuito', free_sub:'Tudo para começar',
+    premium_label:'Premium', premium_sub:'Tudo do Gratuito, mais:',
+    cmp_records:'Registros de serviço', cmp_clients:'Gestão de clientes', cmp_calendar:'Calendário e agendamentos',
+    cmp_reminders:'Lembretes (5 tipos)', cmp_sms:'Confirmação SMS', cmp_pdf:'Exportar PDF', cmp_lang:'10 idiomas',
+    cmp_invoice:'Modo Fatura com IVA', cmp_stats:'Estatísticas visuais (12+ gráficos)', cmp_backup:'Backup e Restauração', cmp_unlimited:'Clientes e registros ilimitados',
+    cap_1:'Registros de serviço', cap_2:'Calendário', cap_3:'Estatísticas ⭐', cap_4:'Lembretes', cap_5:'Horário de trabalho', cap_6:'Detalhes do serviço', cap_7:'Configurações',
+  },
+  nl: {
+    nav_features:'Functies', nav_guide:'Handleiding', nav_premium:'Premium', nav_contact:'Contact',
+    hero_eyebrow:'Werkplaatsbeheer-app',
+    hero_tagline:'Werkplaatsbeheer, vereenvoudigd',
+    hero_desc:'ServisBook beheert uw servicerecords, klanten, afspraken en herinneringen op één plek — alles privé opgeslagen op uw apparaat.',
+    hero_cta:'Verkrijg het op Google Play',
+    eyebrow_free:'Gratis', eyebrow_premium:'⭐ Premium',
+    section_features:'Alles wat u nodig heeft', section_features_sub:'Essentiële tools voor uw servicebedrijf, gratis.',
+    section_premium_features:'Geavanceerde tools voor groeiende bedrijven',
+    section_screenshots:'De app in actie', section_video:'Bekijk de demo',
+    section_premium:'Word Premium', section_premium_sub:'Abonneer in de app via Google Play — maandelijks of jaarlijks.',
+    section_guide:'Gebruikershandleiding', guide_teaser:'Gedetailleerde instructies voor elke functie.', guide_cta:'Lees de volledige handleiding →',
+    feat_records_title:'Servicerecords', feat_records_desc:'Drie statussen: Gepland → In uitvoering → Voltooid.',
+    feat_clients_title:'Klantbeheer', feat_clients_desc:'Klantendatabase met servicehistorie en omzet.',
+    feat_calendar_title:'Kalender', feat_calendar_desc:'Maandoverzicht en dagrooster met vrije tijdslots.',
+    feat_reminders_title:'Herinneringen', feat_reminders_desc:'5 typen: Bellen, SMS, Aanbieding, Nieuwe service, Persoonlijke notitie.',
+    feat_search_title:'Zoeken & Filteren', feat_search_desc:'Realtime zoeken op klant of omschrijving.',
+    feat_sms_title:'SMS-bevestiging', feat_sms_desc:'Stuur afspraakbevestiging per SMS met één tik.',
+    feat_pdf_title:'PDF & Delen', feat_pdf_desc:'Genereer een PDF en deel het via e-mail of afdrukken.',
+    feat_lang_title:'10 talen', feat_lang_desc:'Engels, Servisch, Duits, Frans, Spaans, Italiaans, Portugees, Nederlands, Pools, Kroatisch.',
+    feat_invoice_title:'Facturatiestand', feat_invoice_desc:'Regels met hoeveelheid, stukprijs en automatische btw-berekening.',
+    feat_stats_title:'Visuele statistieken', feat_stats_desc:'12+ grafieken: omzettrends, topklanten, drukste dagen en meer.',
+    feat_backup_title:'Backup & Herstel', feat_backup_desc:'Exporteer uw gegevens en herstel ze op elk apparaat.',
+    feat_unlimited_title:'Onbeperkt', feat_unlimited_desc:'Geen limieten op klanten of servicerecords.',
+    free_label:'Gratis', free_sub:'Alles om te beginnen',
+    premium_label:'Premium', premium_sub:'Alles van Gratis, plus:',
+    cmp_records:'Servicerecords', cmp_clients:'Klantbeheer', cmp_calendar:'Kalender & afspraken',
+    cmp_reminders:'Herinneringen (5 typen)', cmp_sms:'SMS-bevestiging', cmp_pdf:'PDF exporteren', cmp_lang:'10 talen',
+    cmp_invoice:'Facturatiestand met btw', cmp_stats:'Visuele statistieken (12+ grafieken)', cmp_backup:'Backup & Herstel', cmp_unlimited:'Onbeperkte klanten & records',
+    cap_1:'Servicerecords', cap_2:'Kalender', cap_3:'Statistieken ⭐', cap_4:'Herinneringen', cap_5:'Werktijden', cap_6:'Servicedetails', cap_7:'Instellingen',
+  },
+  pl: {
+    nav_features:'Funkcje', nav_guide:'Przewodnik', nav_premium:'Premium', nav_contact:'Kontakt',
+    hero_eyebrow:'Aplikacja do zarządzania warsztatem',
+    hero_tagline:'Zarządzanie warsztatem, uproszczone',
+    hero_desc:'ServisBook gromadzi zlecenia serwisowe, klientów, terminy i przypomnienia w jednym miejscu — wszystko prywatnie na Twoim urządzeniu.',
+    hero_cta:'Pobierz z Google Play',
+    eyebrow_free:'Bezpłatny', eyebrow_premium:'⭐ Premium',
+    section_features:'Wszystko, czego potrzebujesz', section_features_sub:'Podstawowe narzędzia dla Twojego serwisu, bezpłatnie.',
+    section_premium_features:'Zaawansowane narzędzia dla rozwijających się firm',
+    section_screenshots:'Aplikacja w akcji', section_video:'Obejrzyj demo',
+    section_premium:'Przejdź na Premium', section_premium_sub:'Zasubskrybuj w aplikacji przez Google Play — miesięcznie lub rocznie.',
+    section_guide:'Przewodnik użytkownika', guide_teaser:'Szczegółowe instrukcje dla każdej funkcji.', guide_cta:'Przeczytaj pełny przewodnik →',
+    feat_records_title:'Zlecenia serwisowe', feat_records_desc:'Trzy stany: Zaplanowane → W toku → Zakończone.',
+    feat_clients_title:'Zarządzanie klientami', feat_clients_desc:'Baza klientów z historią i przychodami.',
+    feat_calendar_title:'Kalendarz', feat_calendar_desc:'Widok miesięczny i dzienny z wolnymi slotami.',
+    feat_reminders_title:'Przypomnienia', feat_reminders_desc:'5 typów: Połączenie, SMS, Oferta, Nowy serwis, Notatka osobista.',
+    feat_search_title:'Szukaj i Filtruj', feat_search_desc:'Wyszukiwanie w czasie rzeczywistym po kliencie lub opisie.',
+    feat_sms_title:'Potwierdzenie SMS', feat_sms_desc:'Wyślij potwierdzenie terminu SMS jednym dotknięciem.',
+    feat_pdf_title:'PDF i Udostępnianie', feat_pdf_desc:'Generuj PDF zlecenia i udostępniaj przez email lub drukuj.',
+    feat_lang_title:'10 języków', feat_lang_desc:'Angielski, Serbski, Niemiecki, Francuski, Hiszpański, Włoski, Portugalski, Holenderski, Polski, Chorwacki.',
+    feat_invoice_title:'Tryb faktury', feat_invoice_desc:'Pozycje z ilością, ceną jednostkową i automatycznym VAT.',
+    feat_stats_title:'Statystyki wizualne', feat_stats_desc:'12+ wykresów: trendy przychodów, top klienci, najętsze dni.',
+    feat_backup_title:'Kopia zapasowa i przywócenie', feat_backup_desc:'Eksportuj dane i przywróć je na dowolnym urządzeniu.',
+    feat_unlimited_title:'Nieograniczony', feat_unlimited_desc:'Bez limitów klientów ani zleceń.',
+    free_label:'Bezpłatny', free_sub:'Wszystko na start',
+    premium_label:'Premium', premium_sub:'Wszystko z Bezpłatnego, plus:',
+    cmp_records:'Zlecenia serwisowe', cmp_clients:'Zarządzanie klientami', cmp_calendar:'Kalendarz i terminy',
+    cmp_reminders:'Przypomnienia (5 typów)', cmp_sms:'Potwierdzenie SMS', cmp_pdf:'Eksport PDF', cmp_lang:'10 języków',
+    cmp_invoice:'Tryb faktury z VAT', cmp_stats:'Statystyki wizualne (12+ wykresów)', cmp_backup:'Kopia zapasowa i przywócenie', cmp_unlimited:'Nieograniczeni klienci i zlecenia',
+    cap_1:'Zlecenia serwisowe', cap_2:'Kalendarz', cap_3:'Statystyki ⭐', cap_4:'Przypomnienia', cap_5:'Godziny pracy', cap_6:'Szczegóły zlecenia', cap_7:'Ustawienia',
+  },
+  hr: {
+    nav_features:'Mogućnosti', nav_guide:'Upute', nav_premium:'Premium', nav_contact:'Kontakt',
+    hero_eyebrow:'Aplikacija za upravljanje servisom',
+    hero_tagline:'Upravljanje servisom, jednostavno',
+    hero_desc:'ServisBook čuva vaše usluge, klijente, termine i podsjetnike na jednom mjestu — sve privatno na vašem uređaju.',
+    hero_cta:'Preuzmi na Google Play',
+    eyebrow_free:'Besplatno', eyebrow_premium:'⭐ Premium',
+    section_features:'Sve što trebate', section_features_sub:'Osnovni alati za vaš servisni posao, besplatno.',
+    section_premium_features:'Napredni alati za rast poslovanja',
+    section_screenshots:'Pogledajte aplikaciju', section_video:'Pogledajte demo',
+    section_premium:'Premium plan', section_premium_sub:'Pretplatite se u aplikaciji putem Google Playa — mjesečno ili godišnje.',
+    section_guide:'Upute za korištenje', guide_teaser:'Detaljne upute korak po korak za svaku funkciju.', guide_cta:'Pročitajte cijele upute →',
+    feat_records_title:'Evidencija usluga', feat_records_desc:'Tri statusa: Zakazano → U tijeku → Završeno.',
+    feat_clients_title:'Upravljanje klijentima', feat_clients_desc:'Baza klijenata s povijesti usluga i zaradama.',
+    feat_calendar_title:'Kalendar', feat_calendar_desc:'Mjesečni pregled i dnevni raspored sa slobodnim terminima.',
+    feat_reminders_title:'Podsjetnici', feat_reminders_desc:'5 vrsta: Poziv, SMS, Ponuda, Nova usluga, Osobna bilješka.',
+    feat_search_title:'Pretraga i filtriranje', feat_search_desc:'Pretraga u realnom vremenu po klijentu ili opisu.',
+    feat_sms_title:'SMS potvrda', feat_sms_desc:'Pošaljite SMS potvrdu termina klijentu jednim dodirom.',
+    feat_pdf_title:'PDF i dijeljenje', feat_pdf_desc:'Generirajte PDF radnog naloga i podijelite ga.',
+    feat_lang_title:'10 jezika', feat_lang_desc:'Srpski, engleski, njemački, francuski, španjolski, talijanski, portugalski, nizozemski, poljski, hrvatski.',
+    feat_invoice_title:'Premium unos', feat_invoice_desc:'Stavke s količinom, jediničnom cijenom i automatskim PDV-om.',
+    feat_stats_title:'Vizualne statistike', feat_stats_desc:'12+ grafikona: prihodi, top klijenti, najopterećeniji dani.',
+    feat_backup_title:'Backup i obnova', feat_backup_desc:'Izvezite sve podatke i obnovite ih na bilo kojem uređaju.',
+    feat_unlimited_title:'Neograničeno', feat_unlimited_desc:'Bez ograničenja broja klijenata ili usluga.',
+    free_label:'Besplatno', free_sub:'Sve za početak',
+    premium_label:'Premium', premium_sub:'Sve iz Besplatnog, plus:',
+    cmp_records:'Evidencija usluga', cmp_clients:'Upravljanje klijentima', cmp_calendar:'Kalendar i zakazivanje',
+    cmp_reminders:'Podsjetnici (5 vrsta)', cmp_sms:'SMS potvrda', cmp_pdf:'PDF izvoz', cmp_lang:'10 jezika',
+    cmp_invoice:'Premium unos s PDV-om', cmp_stats:'Vizualne statistike (12+ grafikona)', cmp_backup:'Backup i obnova', cmp_unlimited:'Neograničen broj klijenata i usluga',
+    cap_1:'Evidencija usluga', cap_2:'Kalendar', cap_3:'Statistike ⭐', cap_4:'Podsjetnici', cap_5:'Radno vrijeme', cap_6:'Detalji usluge', cap_7:'Postavke',
+  },
+};
+
+const LANG_LABELS = { en:'EN', sr:'SR', de:'DE', fr:'FR', es:'ES', it:'IT', pt:'PT', nl:'NL', pl:'PL', hr:'HR' };
+
+let currentLang = 'en';
+
+function applyLang(lang) {
+  if (!T[lang]) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (T[lang][k] !== undefined) el.textContent = T[lang][k];
+  });
+  document.getElementById('lang-label').textContent = LANG_LABELS[lang] || lang.toUpperCase();
+  document.querySelectorAll('.lang-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.lang === lang);
+  });
+  localStorage.setItem('sb_lang', lang);
+}
+
+function detectLang() {
+  const saved = localStorage.getItem('sb_lang');
+  if (saved && T[saved]) return saved;
+  const nav = (navigator.language || '').toLowerCase().slice(0, 2);
+  return T[nav] ? nav : 'en';
+}
+
+// Lang dropdown
+const langBtn = document.getElementById('lang-btn');
+const langDrop = document.getElementById('lang-dropdown');
+langBtn.addEventListener('click', e => { e.stopPropagation(); langDrop.classList.toggle('open'); });
+document.addEventListener('click', () => langDrop.classList.remove('open'));
+document.querySelectorAll('.lang-option').forEach(o => {
+  o.addEventListener('click', () => { applyLang(o.dataset.lang); langDrop.classList.remove('open'); });
+});
+
+// Hamburger
+const ham = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+ham.addEventListener('click', () => {
+  ham.classList.toggle('open');
+  mobileNav.classList.toggle('open');
+});
+mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  ham.classList.remove('open'); mobileNav.classList.remove('open');
+}));
+
+// Theme toggle
+const themeBtn = document.getElementById('theme-btn');
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('sb_theme', t);
+}
+themeBtn.addEventListener('click', () => {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+const savedTheme = localStorage.getItem('sb_theme');
+if (savedTheme) applyTheme(savedTheme);
+
+// Video
+const video = document.getElementById('demo-video');
+const overlay = document.getElementById('video-overlay');
+overlay.addEventListener('click', () => { video.play(); overlay.classList.add('hidden'); });
+video.addEventListener('pause', () => overlay.classList.remove('hidden'));
+video.addEventListener('ended', () => overlay.classList.remove('hidden'));
+video.addEventListener('click', () => { if (!video.paused) { video.pause(); } });
+
+// Gallery drag scroll
+const gallery = document.getElementById('gallery');
+let isDown = false, startX, scrollLeft;
+gallery.addEventListener('mousedown', e => { isDown = true; gallery.style.cursor = 'grabbing'; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
+gallery.addEventListener('mouseleave', () => { isDown = false; gallery.style.cursor = 'grab'; });
+gallery.addEventListener('mouseup', () => { isDown = false; gallery.style.cursor = 'grab'; });
+gallery.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); gallery.scrollLeft = scrollLeft - (e.pageX - gallery.offsetLeft - startX); });
+
+// Init
+applyLang(detectLang());
+</script>
+</body>
+</html>

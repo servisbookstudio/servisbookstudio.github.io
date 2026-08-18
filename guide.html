@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ServisBook — User Guide</title>
+  <meta name="description" content="Complete user guide for ServisBook — getting started, service records, calendar, reminders, statistics and more.">
+  <style>
+    :root {
+      --bg: #f8faff; --bg-alt: #eef2fb; --nav-bg: rgba(255,255,255,.96);
+      --text: #1a2333; --text-muted: #4a5568; --border: #dde6f3;
+      --primary: #0D47A1; --primary-l: #1565C0; --primary-xl: #1976D2;
+      --gold: #F9A825; --gold-bg: #fffbf0; --gold-border: #ffe082;
+      --card: #ffffff;
+      --shadow-sm: 0 2px 8px rgba(13,71,161,.07);
+      --shadow: 0 8px 32px rgba(13,71,161,.10);
+      --r: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0a1628; --bg-alt: #0d1f38; --nav-bg: rgba(10,22,40,.96);
+        --text: #dde8f4; --text-muted: #7a9ab5; --border: #1a3355;
+        --card: #0f1e35; --gold-bg: #1c1500; --gold-border: #3d2e00;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,.25);
+        --shadow: 0 8px 32px rgba(0,0,0,.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0a1628; --bg-alt: #0d1f38; --nav-bg: rgba(10,22,40,.96);
+      --text: #dde8f4; --text-muted: #7a9ab5; --border: #1a3355;
+      --card: #0f1e35; --gold-bg: #1c1500; --gold-border: #3d2e00;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.25); --shadow: 0 8px 32px rgba(0,0,0,.35);
+    }
+    :root[data-theme="light"] {
+      --bg: #f8faff; --bg-alt: #eef2fb; --nav-bg: rgba(255,255,255,.96);
+      --text: #1a2333; --text-muted: #4a5568; --border: #dde6f3;
+      --card: #ffffff; --gold-bg: #fffbf0; --gold-border: #ffe082;
+      --shadow-sm: 0 2px 8px rgba(13,71,161,.07); --shadow: 0 8px 32px rgba(13,71,161,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+    img { max-width: 100%; display: block; }
+    a { color: var(--primary-xl); }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--nav-bg); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 60px; gap: 16px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-logo span { font-weight: 700; font-size: 17px; color: var(--primary); }
+    .nav-back { font-size: 14px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .nav-back:hover { color: var(--primary); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .theme-btn {
+      background: var(--bg-alt); border: 1px solid var(--border); border-radius: 8px;
+      width: 34px; height: 34px; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* HEADER */
+    .guide-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-xl) 100%);
+      color: #fff; padding: 40px 20px 36px; text-align: center;
+    }
+    .guide-header h1 { font-size: clamp(22px, 5vw, 36px); font-weight: 800; margin-bottom: 8px; }
+    .guide-header p { opacity: .85; font-size: 15px; max-width: 520px; margin: 0 auto; }
+
+    /* SEARCH */
+    .search-wrap { max-width: 560px; margin: 28px auto 0; padding: 0 20px; }
+    .search-input {
+      width: 100%; padding: 12px 16px 12px 44px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+      font-size: 15px; outline: none; transition: border-color .15s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: 14px center;
+    }
+    .search-input:focus { border-color: var(--primary-xl); }
+
+    /* LAYOUT */
+    .guide-layout {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr;
+      padding: 32px 20px 80px; gap: 32px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      display: none;
+    }
+    .sidebar-inner {
+      position: sticky; top: 76px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 16px; box-shadow: var(--shadow-sm);
+    }
+    .sidebar-title {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 8px; text-decoration: none;
+      font-size: 13px; color: var(--text-muted); transition: background .1s, color .1s;
+      white-space: nowrap;
+    }
+    .sidebar-link:hover, .sidebar-link.active { background: var(--bg-alt); color: var(--primary); }
+    .sidebar-link span { font-size: 16px; }
+
+    /* CONTENT */
+    .guide-section {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+    .guide-section.hidden { display: none; }
+
+    .section-header-btn {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 18px 20px; text-align: left;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      color: var(--text);
+    }
+    .section-header-btn:hover { background: var(--bg-alt); }
+    .section-title-row { display: flex; align-items: center; gap: 12px; }
+    .section-icon { font-size: 22px; flex-shrink: 0; }
+    .section-title { font-size: 16px; font-weight: 700; }
+    .section-chevron { font-size: 18px; color: var(--text-muted); transition: transform .2s; flex-shrink: 0; }
+    .guide-section.open .section-chevron { transform: rotate(180deg); }
+
+    .section-body { display: none; padding: 0 20px 20px; }
+    .guide-section.open .section-body { display: block; }
+
+    /* Screenshot in guide */
+    .guide-screenshot {
+      float: right; margin: 0 0 16px 20px;
+      width: 140px; border-radius: 16px;
+      border: 2px solid var(--border); overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .guide-screenshot img { width: 100%; display: block; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+
+    /* Items */
+    .item { margin-bottom: 18px; }
+    .item:last-child { margin-bottom: 0; }
+    .item-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; margin-right: 8px;
+    }
+    .item-header { display: flex; align-items: center; margin-bottom: 4px; }
+    .item-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .item-body { font-size: 14px; color: var(--text-muted); line-height: 1.65; padding-left: 30px; }
+
+    /* Premium badge */
+    .premium-note {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--gold-bg); border: 1px solid var(--gold-border);
+      color: #92400e; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
+      vertical-align: middle;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .premium-note { color: var(--gold); }
+    }
+    :root[data-theme="dark"] .premium-note { color: var(--gold); }
+
+    /* No results */
+    .no-results { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 15px; }
+
+    /* RESPONSIVE */
+    @media (min-width: 900px) {
+      .guide-layout { grid-template-columns: 220px 1fr; }
+      .sidebar { display: block; }
+    }
+    @media (min-width: 1024px) {
+      .guide-screenshot { width: 170px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="assets/logo.png" alt="ServisBook">
+      <span>ServisBook</span>
+    </a>
+    <a class="nav-back" href="index.html">← Back to Home</a>
+    <div class="nav-right">
+      <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<div class="guide-header">
+  <h1>User Guide</h1>
+  <p>Step-by-step instructions for every feature of ServisBook</p>
+</div>
+
+<div class="search-wrap">
+  <input class="search-input" id="search" type="search" placeholder="Search the guide…" autocomplete="off">
+</div>
+
+<div class="guide-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-title">Contents</div>
+      <a class="sidebar-link" href="#s1"><span>🚀</span> Getting Started</a>
+      <a class="sidebar-link" href="#s2"><span>📋</span> Service Records</a>
+      <a class="sidebar-link" href="#s3"><span>➕</span> Booking a Service</a>
+      <a class="sidebar-link" href="#s4"><span>🔄</span> Statuses &amp; Cancellation</a>
+      <a class="sidebar-link" href="#s5"><span>🧾</span> Invoice Mode <span class="premium-note">⭐</span></a>
+      <a class="sidebar-link" href="#s6"><span>👥</span> Clients</a>
+      <a class="sidebar-link" href="#s7"><span>📅</span> Calendar</a>
+      <a class="sidebar-link" href="#s8"><span>🔔</span> Reminders</a>
+      <a class="sidebar-link" href="#s9"><span>📊</span> Statistics <span class="premium-note">⭐</span></a>
+      <a class="sidebar-link" href="#s10"><span>⚙️</span> Settings &amp; Account</a>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main id="guide-content">
+
+    <!-- 1. Getting Started -->
+    <div class="guide-section open" id="s1" data-section="getting started language account company workstations working hours holidays">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">🚀</span>
+          <span class="section-title">1. Getting Started</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/7.jpg" alt="Settings" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Language Setup</span></div>
+            <div class="item-body">On first launch, select your preferred language. You can also change the language later in Settings.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Creating an Account</span></div>
+            <div class="item-body">Enter a username and password (minimum 4 characters). No registration required — all data is stored locally on the device.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Company Information</span></div>
+            <div class="item-body">Right after the first login the app takes you to the company information screen. Fill in the name, address, tax number and other required details.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">4</span><span class="item-title">Workstations</span></div>
+            <div class="item-body">In Settings → Company Info → Workstations add counters, booths or positions (e.g. "Counter 1", "Lift"). They allow viewing occupancy per station.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">5</span><span class="item-title">Working Hours and Holidays</span></div>
+            <div class="item-body">Set working hours for each day of the week and add public holiday dates. The app uses working hours when calculating service duration and displaying available slots.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Service Records -->
+    <div class="guide-section" id="s2" data-section="service records tabs scheduled in progress completed cards color search filter sort period">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">📋</span>
+          <span class="section-title">2. Service Records</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/1.jpg" alt="Service Records" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Three Tabs — Three Statuses</span></div>
+            <div class="item-body">Service records are divided into three tabs: <strong>Scheduled</strong> — appointments yet to be carried out; <strong>In Progress</strong> — services currently underway; <strong>Completed</strong> — archive of all finished services.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Time Period for Completed Services</span></div>
+            <div class="item-body">Select the review period: 15 days, 30 days, 6 months, 12 months or all time.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Card Colors</span></div>
+            <div class="item-body">Cards can be color-coded: <strong>Yellow</strong> — service should have started but hasn't; <strong>Green</strong> — service is in progress and completion time is approaching.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">4</span><span class="item-title">Sound Alarm</span></div>
+            <div class="item-body">If you enable sound alerts in Settings → Notifications, the app will notify you with sound and vibration when a scheduled appointment time arrives.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">5</span><span class="item-title">Search</span></div>
+            <div class="item-body">At the top of the screen enter part of the service description or client name. The list filters in real time.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">6</span><span class="item-title">Filtering and Sorting</span></div>
+            <div class="item-body">Use the calendar icon to filter by date. Use the sort icon to order the list by date, price or client name.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Booking a Service -->
+    <div class="guide-section" id="s3" data-section="booking add new service client date time description notes photos sms reminder">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">➕</span>
+          <span class="section-title">3. Booking a Service</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="item">
+          <div class="item-header"><span class="item-num">1</span><span class="item-title">Starting</span></div>
+          <div class="item-body">Tap the <strong>+</strong> button in the bottom right of the Services screen, or tap a free slot in the Calendar.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">2</span><span class="item-title">Selecting a Client</span></div>
+          <div class="item-body">Choose a client from the list or add a new one directly on the form. The client must be added before booking a service.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">3</span><span class="item-title">Date and Time</span></div>
+          <div class="item-body">Select start date and time. Enter duration or manually select end time. Duration is calculated in working hours according to your schedule.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">4</span><span class="item-title">Description and Notes</span></div>
+          <div class="item-body">Service description is required in Basic entry mode. Notes are optional and appear in italic on the card.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">5</span><span class="item-title">Photos</span></div>
+          <div class="item-body">Add photos from the gallery or camera. They are stored locally and displayed as thumbnails on the card.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">6</span><span class="item-title">SMS Confirmation to Client</span></div>
+          <div class="item-body">Enable the "Send SMS confirmation to client" toggle before saving. The app opens the SMS app with a pre-filled number and message.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">7</span><span class="item-title">Reminder</span></div>
+          <div class="item-body">Enable "Add reminder" and select the type. The reminder appears in the Reminders section on the selected date and time.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Statuses and Cancellation -->
+    <div class="guide-section" id="s4" data-section="status change in progress completed cancel cancellation pdf export share">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">🔄</span>
+          <span class="section-title">4. Statuses &amp; Cancellation</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/6.jpg" alt="Service Details" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Starting a Service</span></div>
+            <div class="item-body">On the card in the "Scheduled" tab tap the <strong>In Progress</strong> button. The service moves to the In Progress tab.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Completing a Service</span></div>
+            <div class="item-body">On the card in the "In Progress" tab tap <strong>Completed</strong>. Enter the final price (if not already entered). The service moves to Completed.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Cancellation</span></div>
+            <div class="item-body">Tap "Cancel" on the card in the Scheduled tab. Confirm the cancellation and, if desired, send an SMS notification to the client.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">4</span><span class="item-title">View and PDF Export</span></div>
+            <div class="item-body">Tap the completed service card for a detailed view. Use the share icon in the top right to generate and send a PDF.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Premium Invoice Mode -->
+    <div class="guide-section" id="s5" data-section="premium invoice vat tax line items pdf service details">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">🧾</span>
+          <span class="section-title">5. Invoice Mode <span class="premium-note">⭐ Premium</span></span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="item">
+          <div class="item-header"><span class="item-num">1</span><span class="item-title">Enabling Premium Entry Mode</span></div>
+          <div class="item-body">Go to <strong>Settings → Entry Mode → Premium</strong>. Available only to Premium plan users.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">2</span><span class="item-title">Adding Line Items</span></div>
+          <div class="item-body">In Premium mode the service form shows a table. Add rows with item name, unit, quantity and unit price.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">3</span><span class="item-title">Tax (VAT)</span></div>
+          <div class="item-body">Enter the VAT rate in Settings (e.g. 20%). The app automatically calculates the tax amount and total.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">4</span><span class="item-title">PDF Service Details</span></div>
+          <div class="item-body">On the Service Details screen tap the share icon. A PDF is generated with company data, client and all line items.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Clients -->
+    <div class="guide-section" id="s6" data-section="clients add import contacts history delete earnings">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">👥</span>
+          <span class="section-title">6. Clients</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="item">
+          <div class="item-header"><span class="item-num">1</span><span class="item-title">Adding a Client</span></div>
+          <div class="item-body">Tap <strong>+</strong> and manually enter last name, first name and phone number (required). E-mail, address and notes are optional.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">2</span><span class="item-title">Import from Contacts</span></div>
+          <div class="item-body">On the form tap the contact icon. The app opens the phone contacts — select a contact and the data is filled in automatically.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">3</span><span class="item-title">Client History</span></div>
+          <div class="item-body">Tap on a client in the list to see all their services, total number of appointments and total earnings.</div>
+        </div>
+        <div class="item">
+          <div class="item-header"><span class="item-num">4</span><span class="item-title">Deleting a Client</span></div>
+          <div class="item-body"><strong>Warning:</strong> deleting a client also removes all their services and reminders. This action cannot be undone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Calendar -->
+    <div class="guide-section" id="s7" data-section="calendar monthly daily timeline booking workstation filter">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">📅</span>
+          <span class="section-title">7. Calendar</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/2.jpg" alt="Calendar" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Monthly View</span></div>
+            <div class="item-body">Shows which days have scheduled appointments. Tap a day to see the detailed daily view.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Daily Timeline</span></div>
+            <div class="item-body">Vertical view of the day with all scheduled appointments. Each block shows client name, description and duration.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Booking from Calendar</span></div>
+            <div class="item-body">Tap a free slot in the daily view to immediately open the new service form with a pre-set date and time.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">4</span><span class="item-title">Filtering by Workstation</span></div>
+            <div class="item-body">If you have multiple workstations, use the filter at the top to see appointments for one station only.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Reminders -->
+    <div class="guide-section" id="s8" data-section="reminders call sms offer new service personal note done">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">🔔</span>
+          <span class="section-title">8. Reminders</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/4.jpg" alt="Reminders" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Reminder Types</span></div>
+            <div class="item-body">
+              <strong>Call</strong> — opens the phone app<br>
+              <strong>SMS</strong> — opens SMS app with a pre-defined message<br>
+              <strong>Offer</strong> — opens e-mail app<br>
+              <strong>New service</strong> — opens the booking form<br>
+              <strong>Personal note</strong> — personal reminder, no automatic action
+            </div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Adding a Reminder</span></div>
+            <div class="item-body">Tap <strong>+</strong> for a new reminder. Select type, client, date and time. The reminder appears in the list on the scheduled date.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Marking as Done</span></div>
+            <div class="item-body">After completing the action (call, SMS…) mark the reminder as done. It moves to the Done section.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Statistics -->
+    <div class="guide-section" id="s9" data-section="statistics premium charts revenue clients trend busiest day average">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">📊</span>
+          <span class="section-title">9. Statistics <span class="premium-note">⭐ Premium</span></span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/3.jpg" alt="Statistics" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Premium Feature</span></div>
+            <div class="item-body">Statistics are available exclusively to Premium plan users. The free version shows a blurred preview with a lock icon.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Available Charts</span></div>
+            <div class="item-body">
+              Revenue in selected month · Monthly revenue trend · Revenue by workstation · Top 5 clients by revenue and job count · Service status distribution · Job count trend · Busiest day of the week · New clients per month · Average service value trend · Loyal and one-time clients · Average service duration · Revenue details: avg, max, yearly comparison
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Settings and Account -->
+    <div class="guide-section" id="s10" data-section="settings company language theme backup restore premium password change account">
+      <button class="section-header-btn" onclick="toggleSection(this)">
+        <div class="section-title-row">
+          <span class="section-icon">⚙️</span>
+          <span class="section-title">10. Settings &amp; Account</span>
+        </div>
+        <span class="section-chevron">▾</span>
+      </button>
+      <div class="section-body">
+        <div class="guide-screenshot">
+          <img src="assets/5.jpg" alt="Working Hours Settings" loading="lazy">
+        </div>
+        <div class="clearfix">
+          <div class="item">
+            <div class="item-header"><span class="item-num">1</span><span class="item-title">Company Information</span></div>
+            <div class="item-body">Company name, address, tax number, registration number, bank account and contact details. Used on the service details page. Here you can also configure the working hours schedule by day, holiday dates, and workstation names.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">2</span><span class="item-title">Language and Theme</span></div>
+            <div class="item-body">10 languages available. Choose between light, dark or system theme.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">3</span><span class="item-title">Data Backup <span class="premium-note">⭐ Premium</span></span></div>
+            <div class="item-body">Create a backup of all data. The file is saved to the Downloads folder and can be used to transfer to another device.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">4</span><span class="item-title">Data Restore <span class="premium-note">⭐ Premium</span></span></div>
+            <div class="item-body">Import a previously created backup. <strong>Warning:</strong> restore replaces all existing data in the app.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">5</span><span class="item-title">Premium Plan</span></div>
+            <div class="item-body">Upgrade to Premium for statistics, backup, line-item service view with VAT and unlimited clients and services.</div>
+          </div>
+          <div class="item">
+            <div class="item-header"><span class="item-num">6</span><span class="item-title">Change Password</span></div>
+            <div class="item-body">In Settings tap "Change password". Enter the old and new password (minimum 4 characters).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-results" id="no-results" style="display:none">
+      No results found. Try a different search term.
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-btn');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('sb_theme', t);
+  }
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  const savedTheme = localStorage.getItem('sb_theme');
+  if (savedTheme) applyTheme(savedTheme);
+
+  // Accordion
+  function toggleSection(btn) {
+    const section = btn.closest('.guide-section');
+    section.classList.toggle('open');
+  }
+
+  // Search
+  const searchInput = document.getElementById('search');
+  const sections = document.querySelectorAll('.guide-section');
+  const noResults = document.getElementById('no-results');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    let found = 0;
+    sections.forEach(s => {
+      const text = (s.dataset.section + ' ' + s.textContent).toLowerCase();
+      const match = !q || text.includes(q);
+      s.classList.toggle('hidden', !match);
+      if (match) { found++; if (q) s.classList.add('open'); }
+    });
+    noResults.style.display = found === 0 ? 'block' : 'none';
+  });
+
+  // Sidebar active link on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
