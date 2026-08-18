@@ -209,11 +209,12 @@
       border-color: var(--gold-border); background: var(--gold-bg);
     }
     .premium-badge {
-      display: inline-flex; align-items: center; gap: 4px;
+      display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
       background: var(--gold); color: #5c3d00;
       font-size: 10px; font-weight: 700; border-radius: 6px;
-      padding: 2px 7px; margin-bottom: 10px; letter-spacing: .04em;
+      padding: 4px 10px; margin-bottom: 10px; letter-spacing: .04em;
     }
+    .premium-grid .feat-card { text-align: center; }
 
     /* SCREENSHOTS */
     .gallery-wrap {
@@ -470,32 +471,32 @@
     </div>
     <div class="features-grid premium-grid">
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_invoice_title">Premium Input Mode</div>
         <div class="feat-desc" data-i18n="feat_invoice_desc">Line-item service records with quantity, unit price and automatic VAT calculation.</div>
       </div>
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_stats_title">Visual Statistics</div>
         <div class="feat-desc" data-i18n="feat_stats_desc">12+ charts: revenue trends, top clients, busiest days, average service value, new vs. loyal clients and more.</div>
       </div>
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_backup_title">Backup &amp; Restore</div>
         <div class="feat-desc" data-i18n="feat_backup_desc">Export all your data to a file and restore it on any device. Never lose your business history.</div>
       </div>
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_unlimited_title">Unlimited</div>
         <div class="feat-desc" data-i18n="feat_unlimited_desc">No limits on the number of clients or service records. Scale your business without restrictions.</div>
       </div>
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_workstations_title">More Workstations</div>
         <div class="feat-desc" data-i18n="feat_workstations_desc">Up to 20 workstations instead of 2 in the free version. Ideal for larger workshops.</div>
       </div>
       <div class="feat-card">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="feat-title" data-i18n="feat_ads_title">No Ads</div>
         <div class="feat-desc" data-i18n="feat_ads_desc">Premium subscribers see no banner advertisements. Enjoy an uninterrupted experience.</div>
       </div>
@@ -585,7 +586,7 @@
         </ul>
       </div>
       <div class="compare-card premium">
-        <div class="premium-badge">⭐⭐⭐⭐⭐ PREMIUM</div>
+        <div class="premium-badge"><span>PREMIUM</span><span>⭐⭐⭐⭐⭐</span></div>
         <div class="compare-title" data-i18n="premium_label">Premium</div>
         <div class="compare-sub" data-i18n="premium_sub">Everything in Free, plus:</div>
         <ul class="compare-list">
