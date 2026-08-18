@@ -1084,7 +1084,6 @@ gallery.addEventListener('pointerdown', e => {
   gallery.setPointerCapture(e.pointerId);
   gallery.style.cursor = 'grabbing';
   gallery.style.scrollSnapType = 'none';
-  e.preventDefault();
 });
 gallery.addEventListener('pointermove', e => {
   if (e.pointerType !== 'mouse' || !e.buttons) return;
