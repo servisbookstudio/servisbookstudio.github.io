@@ -996,10 +996,25 @@ video.addEventListener('click', () => { if (!video.paused) { video.pause(); } })
 // Gallery drag scroll
 const gallery = document.getElementById('gallery');
 let isDown = false, startX, scrollLeft;
-gallery.addEventListener('mousedown', e => { e.preventDefault(); isDown = true; gallery.style.cursor = 'grabbing'; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
-gallery.addEventListener('mouseleave', () => { isDown = false; gallery.style.cursor = 'grab'; });
-gallery.addEventListener('mouseup', () => { isDown = false; gallery.style.cursor = 'grab'; });
-gallery.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); gallery.scrollLeft = scrollLeft - (e.pageX - gallery.offsetLeft - startX); });
+gallery.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX - gallery.offsetLeft;
+  scrollLeft = gallery.scrollLeft;
+  gallery.style.cursor = 'grabbing';
+  gallery.style.scrollSnapType = 'none';
+  e.preventDefault();
+});
+document.addEventListener('mouseup', () => {
+  if (!isDown) return;
+  isDown = false;
+  gallery.style.cursor = 'grab';
+  gallery.style.scrollSnapType = '';
+});
+document.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  gallery.scrollLeft = scrollLeft - (e.pageX - gallery.offsetLeft - startX);
+});
 
 // Init
 applyLang(detectLang());
