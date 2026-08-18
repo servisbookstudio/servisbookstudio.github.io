@@ -118,6 +118,7 @@
 
     /* CONTENT */
     .guide-section {
+      scroll-margin-top: 76px;
       background: var(--card); border: 1px solid var(--border);
       border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm);
       margin-bottom: 20px;
@@ -643,6 +644,20 @@
       if (match) { found++; if (q) s.classList.add('open'); }
     });
     noResults.style.display = found === 0 ? 'block' : 'none';
+  });
+
+  // Sidebar click — otvori sekciju i scrolluj na vrh
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').slice(1);
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      sections.forEach(s => s.classList.toggle('open', s === target));
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
   });
 
   // Sidebar active link on scroll
