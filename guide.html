@@ -626,7 +626,7 @@
   // Accordion
   function toggleSection(btn) {
     const section = btn.closest('.guide-section');
-    section.classList.toggle('open');
+    document.querySelectorAll('.guide-section').forEach(s => s.classList.toggle('open', s === section));
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
     const link = document.querySelector(`.sidebar-link[href="#${section.id}"]`);
     if (link) link.classList.add('active');
