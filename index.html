@@ -239,6 +239,27 @@
       font-size: 11px; color: var(--text-muted); font-weight: 500;
     }
     .gallery-item { display: flex; flex-direction: column; align-items: center; }
+    .phone-frame { cursor: zoom-in; }
+
+    /* LIGHTBOX */
+    #lightbox {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,.85); align-items: center; justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img {
+      max-width: 90vw; max-height: 90vh;
+      border-radius: 20px; box-shadow: 0 8px 48px rgba(0,0,0,.6);
+      object-fit: contain;
+    }
+    #lightbox-close {
+      position: fixed; top: 20px; right: 24px;
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      font-size: 22px; width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px); transition: background .15s;
+    }
+    #lightbox-close:hover { background: rgba(255,255,255,.3); }
 
     /* VIDEO */
     .video-wrap {
@@ -506,6 +527,12 @@
     </div>
   </div>
 </section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+  <button id="lightbox-close" aria-label="Close">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
 
 <!-- SCREENSHOTS -->
 <section class="section section-alt" id="screenshots">
@@ -1061,13 +1088,36 @@ gallery.addEventListener('pointerdown', e => {
 });
 gallery.addEventListener('pointermove', e => {
   if (e.pointerType !== 'mouse' || !e.buttons) return;
+  if (Math.abs(e.clientX - dragStartX) > 4) gallery.dataset.dragging = '1';
   gallery.scrollLeft = dragBaseScroll - (e.clientX - dragStartX);
 });
 gallery.addEventListener('lostpointercapture', e => {
   if (e.pointerType !== 'mouse') return;
   gallery.style.cursor = 'grab';
   gallery.style.scrollSnapType = '';
+  setTimeout(() => delete gallery.dataset.dragging, 0);
 });
+
+// Lightbox
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+document.querySelectorAll('.phone-frame img').forEach(img => {
+  img.addEventListener('click', e => {
+    if (gallery.hasAttribute('data-dragging')) return;
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 // Init
 applyLang(detectLang());
