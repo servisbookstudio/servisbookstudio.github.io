@@ -1101,9 +1101,18 @@ gallery.addEventListener('lostpointercapture', e => {
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxClose = document.getElementById('lightbox-close');
-gallery.addEventListener('click', e => {
-  if (gallery.dataset.dragging) return;
-  const img = e.target.closest('.phone-frame img');
+let _lbSrc = null, _lbX = 0, _lbY = 0;
+gallery.addEventListener('pointerdown', e => {
+  _lbSrc = e.target;
+  _lbX = e.clientX;
+  _lbY = e.clientY;
+});
+gallery.addEventListener('pointercancel', () => { _lbSrc = null; });
+gallery.addEventListener('pointerup', e => {
+  const src = _lbSrc; _lbSrc = null;
+  if (!src) return;
+  if (Math.abs(e.clientX - _lbX) > 10 || Math.abs(e.clientY - _lbY) > 10) return;
+  const img = src.closest('.phone-frame img');
   if (!img) return;
   lightboxImg.src = img.src;
   lightboxImg.alt = img.alt;
