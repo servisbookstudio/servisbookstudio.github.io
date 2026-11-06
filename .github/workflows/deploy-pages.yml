@@ -1,0 +1,51 @@
+# Publishes the site to GitHub Pages.
+#
+# Replaces GitHub's built-in "pages build and deployment" workflow, which kept
+# aborting: actions/deploy-pages defaults to a 10-minute timeout while waiting
+# for the Pages service to confirm the deployment, and that wait kept expiring
+# (runs #44 and #46 on 2026-11-06). Here the wait is 30 minutes, so a slow
+# Pages service delays the publish instead of failing it.
+#
+# Requires Settings -> Pages -> Source = "GitHub Actions".
+
+name: Deploy site to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # lets us republish from the Actions tab, without a commit
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two publishes at once, and never cancel one that is already running.
+# The group is deliberately not called "pages": the built-in workflow uses that
+# name, and run #46 is stuck in it, which would hold this one in the queue too.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .
+          # Without this, every dot-file is dropped from the artifact - .nojekyll included.
+          include-hidden-files: true
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 1800000   # 30 minutes; the action's own default is 600000 (10 min)
