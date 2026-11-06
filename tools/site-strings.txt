@@ -1,0 +1,120 @@
+en|||siteGuideTitle|||User Guide
+sr|||siteGuideTitle|||Korisnički vodič
+hr|||siteGuideTitle|||Korisnički vodič
+de|||siteGuideTitle|||Benutzerhandbuch
+fr|||siteGuideTitle|||Guide de l'utilisateur
+it|||siteGuideTitle|||Guida utente
+es|||siteGuideTitle|||Guía del usuario
+nl|||siteGuideTitle|||Gebruikershandleiding
+pl|||siteGuideTitle|||Przewodnik użytkownika
+pt|||siteGuideTitle|||Manual do utilizador
+en|||siteGuideSubtitle|||Step-by-step instructions for every feature of ServisBook
+sr|||siteGuideSubtitle|||Uputstvo korak po korak za svaku funkciju aplikacije ServisBook
+hr|||siteGuideSubtitle|||Upute korak po korak za svaku funkciju aplikacije ServisBook
+de|||siteGuideSubtitle|||Schritt-für-Schritt-Anleitung für jede Funktion von ServisBook
+fr|||siteGuideSubtitle|||Instructions pas à pas pour chaque fonction de ServisBook
+it|||siteGuideSubtitle|||Istruzioni passo passo per ogni funzione di ServisBook
+es|||siteGuideSubtitle|||Instrucciones paso a paso para cada función de ServisBook
+nl|||siteGuideSubtitle|||Stapsgewijze instructies voor elke functie van ServisBook
+pl|||siteGuideSubtitle|||Instrukcje krok po kroku dla każdej funkcji ServisBook
+pt|||siteGuideSubtitle|||Instruções passo a passo para cada funcionalidade do ServisBook
+en|||siteBackHome|||← Back to Home
+sr|||siteBackHome|||← Nazad na početnu
+hr|||siteBackHome|||← Natrag na početnu
+de|||siteBackHome|||← Zurück zur Startseite
+fr|||siteBackHome|||← Retour à l'accueil
+it|||siteBackHome|||← Torna alla home
+es|||siteBackHome|||← Volver al inicio
+nl|||siteBackHome|||← Terug naar start
+pl|||siteBackHome|||← Powrót do strony głównej
+pt|||siteBackHome|||← Voltar ao início
+en|||siteContents|||Contents
+sr|||siteContents|||Sadržaj
+hr|||siteContents|||Sadržaj
+de|||siteContents|||Inhalt
+fr|||siteContents|||Sommaire
+it|||siteContents|||Indice
+es|||siteContents|||Contenido
+nl|||siteContents|||Inhoud
+pl|||siteContents|||Spis treści
+pt|||siteContents|||Índice
+en|||siteSearchPlaceholder|||Search the guide…
+sr|||siteSearchPlaceholder|||Pretraga vodiča…
+hr|||siteSearchPlaceholder|||Pretraga vodiča…
+de|||siteSearchPlaceholder|||Handbuch durchsuchen…
+fr|||siteSearchPlaceholder|||Rechercher dans le guide…
+it|||siteSearchPlaceholder|||Cerca nella guida…
+es|||siteSearchPlaceholder|||Buscar en la guía…
+nl|||siteSearchPlaceholder|||Zoek in de handleiding…
+pl|||siteSearchPlaceholder|||Szukaj w przewodniku…
+pt|||siteSearchPlaceholder|||Pesquisar no manual…
+en|||siteNoResults|||No results found. Try a different search term.
+sr|||siteNoResults|||Nema rezultata. Probajte drugi pojam.
+hr|||siteNoResults|||Nema rezultata. Pokušajte s drugim pojmom.
+de|||siteNoResults|||Keine Ergebnisse. Versuchen Sie einen anderen Suchbegriff.
+fr|||siteNoResults|||Aucun résultat. Essayez un autre terme.
+it|||siteNoResults|||Nessun risultato. Prova un altro termine.
+es|||siteNoResults|||Sin resultados. Prueba otro término.
+nl|||siteNoResults|||Geen resultaten. Probeer een andere zoekterm.
+pl|||siteNoResults|||Brak wyników. Spróbuj innego hasła.
+pt|||siteNoResults|||Sem resultados. Tente outro termo.
+en|||siteClientLimitTitle|||Client Limit
+sr|||siteClientLimitTitle|||Ograničenje broja klijenata
+hr|||siteClientLimitTitle|||Ograničenje broja klijenata
+de|||siteClientLimitTitle|||Kundenlimit
+fr|||siteClientLimitTitle|||Limite de clients
+it|||siteClientLimitTitle|||Limite clienti
+es|||siteClientLimitTitle|||Límite de clientes
+nl|||siteClientLimitTitle|||Klantenlimiet
+pl|||siteClientLimitTitle|||Limit klientów
+pt|||siteClientLimitTitle|||Limite de clientes
+en|||siteClientLimitBody|||The free plan supports up to 40 clients. Upgrade to Premium for unlimited clients.
+sr|||siteClientLimitBody|||Besplatni plan podržava do 40 klijenata. Pređite na Premium za neograničen broj klijenata.
+hr|||siteClientLimitBody|||Besplatni plan podržava do 40 klijenata. Prijeđite na Premium za neograničen broj klijenata.
+de|||siteClientLimitBody|||Der kostenlose Plan unterstützt bis zu 40 Kunden. Mit Premium haben Sie unbegrenzt viele Kunden.
+fr|||siteClientLimitBody|||Le forfait gratuit prend en charge jusqu'à 40 clients. Passez à Premium pour un nombre illimité de clients.
+it|||siteClientLimitBody|||Il piano gratuito supporta fino a 40 clienti. Passa a Premium per clienti illimitati.
+es|||siteClientLimitBody|||El plan gratuito admite hasta 40 clientes. Cambia a Premium para tener clientes ilimitados.
+nl|||siteClientLimitBody|||Het gratis plan ondersteunt maximaal 40 klanten. Ga naar Premium voor onbeperkt veel klanten.
+pl|||siteClientLimitBody|||Plan bezpłatny obsługuje do 40 klientów. Przejdź na Premium, aby mieć nieograniczoną liczbę klientów.
+pt|||siteClientLimitBody|||O plano gratuito suporta até 40 clientes. Mude para Premium para ter clientes ilimitados.
+en|||siteWorkstationLimitTitle|||Workstation Limit
+sr|||siteWorkstationLimitTitle|||Ograničenje radnih mesta
+hr|||siteWorkstationLimitTitle|||Ograničenje radnih mjesta
+de|||siteWorkstationLimitTitle|||Arbeitsplatzlimit
+fr|||siteWorkstationLimitTitle|||Limite de postes de travail
+it|||siteWorkstationLimitTitle|||Limite postazioni
+es|||siteWorkstationLimitTitle|||Límite de puestos de trabajo
+nl|||siteWorkstationLimitTitle|||Limiet werkplekken
+pl|||siteWorkstationLimitTitle|||Limit stanowisk
+pt|||siteWorkstationLimitTitle|||Limite de postos de trabalho
+en|||siteWorkstationLimitBody|||The free plan supports up to 2 workstations. Upgrade to Premium for up to 20 workstations.
+sr|||siteWorkstationLimitBody|||Besplatni plan podržava do 2 radna mesta. Pređite na Premium za najviše 20 radnih mesta.
+hr|||siteWorkstationLimitBody|||Besplatni plan podržava do 2 radna mjesta. Prijeđite na Premium za najviše 20 radnih mjesta.
+de|||siteWorkstationLimitBody|||Der kostenlose Plan unterstützt bis zu 2 Arbeitsplätze. Mit Premium sind es bis zu 20.
+fr|||siteWorkstationLimitBody|||Le forfait gratuit prend en charge jusqu'à 2 postes de travail. Passez à Premium pour en avoir jusqu'à 20.
+it|||siteWorkstationLimitBody|||Il piano gratuito supporta fino a 2 postazioni. Passa a Premium per averne fino a 20.
+es|||siteWorkstationLimitBody|||El plan gratuito admite hasta 2 puestos de trabajo. Cambia a Premium para tener hasta 20.
+nl|||siteWorkstationLimitBody|||Het gratis plan ondersteunt maximaal 2 werkplekken. Ga naar Premium voor maximaal 20.
+pl|||siteWorkstationLimitBody|||Plan bezpłatny obsługuje do 2 stanowisk. Przejdź na Premium, aby mieć do 20 stanowisk.
+pt|||siteWorkstationLimitBody|||O plano gratuito suporta até 2 postos de trabalho. Mude para Premium para ter até 20.
+en|||siteNoAdsTitle|||No Ads
+sr|||siteNoAdsTitle|||Bez reklama
+hr|||siteNoAdsTitle|||Bez reklama
+de|||siteNoAdsTitle|||Keine Werbung
+fr|||siteNoAdsTitle|||Sans publicité
+it|||siteNoAdsTitle|||Senza pubblicità
+es|||siteNoAdsTitle|||Sin anuncios
+nl|||siteNoAdsTitle|||Geen advertenties
+pl|||siteNoAdsTitle|||Bez reklam
+pt|||siteNoAdsTitle|||Sem anúncios
+en|||siteNoAdsBody|||The free plan shows banner ads. Upgrade to Premium to remove all ads from the app.
+sr|||siteNoAdsBody|||Besplatni plan prikazuje reklamne banere. Pređite na Premium da uklonite sve reklame iz aplikacije.
+hr|||siteNoAdsBody|||Besplatni plan prikazuje reklamne banere. Prijeđite na Premium da uklonite sve reklame iz aplikacije.
+de|||siteNoAdsBody|||Der kostenlose Plan zeigt Werbebanner. Mit Premium entfernen Sie alle Anzeigen aus der App.
+fr|||siteNoAdsBody|||Le forfait gratuit affiche des bannières publicitaires. Passez à Premium pour supprimer toutes les publicités.
+it|||siteNoAdsBody|||Il piano gratuito mostra banner pubblicitari. Passa a Premium per rimuovere tutta la pubblicità.
+es|||siteNoAdsBody|||El plan gratuito muestra anuncios de banner. Cambia a Premium para eliminar todos los anuncios.
+nl|||siteNoAdsBody|||Het gratis plan toont banneradvertenties. Ga naar Premium om alle advertenties te verwijderen.
+pl|||siteNoAdsBody|||Plan bezpłatny wyświetla banery reklamowe. Przejdź na Premium, aby usunąć wszystkie reklamy.
+pt|||siteNoAdsBody|||O plano gratuito mostra anúncios em banner. Mude para Premium para remover todos os anúncios.

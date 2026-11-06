@@ -1,0 +1,66 @@
+# Kostur vodiča. Jedna sekcija = red "S", pa njene stavke redom.
+# S | id | emoji | slika | alt | zvjezdica(0/1) | kljucne rijeci za pretragu
+# I | arb helpSecXIY   ili   site kljuc | zvjezdica(0/1)
+S|s1|🚀|assets/7.jpg|Settings|0|getting started language account company workstations working hours holidays hints
+I|arb helpSec1I1|0
+I|arb helpSec1I2|0
+I|arb helpSec1I3|0
+I|arb helpSec1I4|0
+I|arb helpSec1I5|0
+I|arb helpSec1I6|0
+S|s2|📋|assets/1.jpg|Service Records|0|service records tabs scheduled in progress completed cards color search filter sort period revenue
+I|arb helpSec2I1|0
+I|arb helpSec2I2|0
+I|arb helpSec2I3|0
+I|arb helpSec2I4|0
+I|arb helpSec2I5|0
+I|arb helpSec2I6|0
+I|arb helpSec2I7|0
+S|s3|➕|assets/8.jpg|Add Service form|0|booking add new service client date time description notes photos sms reminder
+I|arb helpSec3I1|0
+I|arb helpSec3I2|0
+I|arb helpSec3I3|0
+I|arb helpSec3I4|0
+I|arb helpSec3I5|0
+I|arb helpSec3I6|0
+I|arb helpSec3I7|0
+S|s4|🔄|assets/6.jpg|Service Details|0|status change in progress completed cancel cancellation pdf export share
+I|arb helpSec4I1|0
+I|arb helpSec4I2|0
+I|arb helpSec4I3|0
+I|arb helpSec4I4|0
+S|s5|🧾|assets/19.png|Premium Input Mode|1|premium input mode vat tax line items pdf service details
+I|arb helpSec5I1|0
+I|arb helpSec5I2|0
+I|arb helpSec5I3|0
+I|arb helpSec5I4|0
+S|s6|👥|assets/10.jpg|Clients list|0|clients add import contacts history delete earnings call sms email limit
+I|arb helpSec6I1|0
+I|arb helpSec6I2|0
+I|arb helpSec6I3|0
+I|arb helpSec6I4|0
+I|arb helpSec6I5|0
+I|site clientLimit|1
+S|s7|📅|assets/2.jpg|Calendar|0|calendar monthly daily timeline booking workstation filter
+I|arb helpSec7I1|0
+I|arb helpSec7I2|0
+I|arb helpSec7I3|0
+I|arb helpSec7I4|0
+S|s8|🔔|assets/4.jpg|Reminders|0|reminders call sms offer new service personal note done
+I|arb helpSec8I1|0
+I|arb helpSec8I2|0
+I|arb helpSec8I3|0
+S|s9|📊|assets/3.jpg|Statistics|0|statistics premium charts revenue clients trend busiest day average
+I|arb helpSec9I1|0
+I|arb helpSec9I2|0
+S|s10|⚙️|assets/5.jpg|Working Hours Settings|0|settings company language theme backup restore premium password change account purchases recovery code ads
+I|arb helpSec10I1|0
+I|site workstationLimit|1
+I|arb helpSec10I2|0
+I|arb helpSec10I3|0
+I|arb helpSec10I4|0
+I|site noAds|1
+I|arb helpSec10I5|0
+I|arb helpSec10I6|0
+I|arb helpSec10I7|0
+I|arb helpSec10I8|0
