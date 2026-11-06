@@ -192,3 +192,15 @@ $H =~ s{(\n</body>)}{$NL . $langjs . $1}e or die 'nema </body>';
 
 open(my $out,'>:encoding(UTF-8)','guide.html') or die $!; print $out $H; close $out;
 print "guide.html sklopljen" . $NL;
+
+# ── 7. provjera da svaka slika stvarno postoji ───────────────────────────────
+# Komit 2b60cd7 je zamijenio Service Details sliku samo u index.html i obrisao
+# assets/6.jpg; uputstvo je mjesecima trazilo nepostojecu sliku i prikazivalo
+# slomljenu ikonicu. Od sada build pada umjesto da to propusti.
+my @missing;
+while ($H =~ m{src="(assets/[^"]+)"}g) { push @missing, $1 unless -e $1; }
+if (@missing) {
+  my %u; @missing = grep { !$u{$_}++ } @missing;
+  die "GRESKA: guide.html trazi slike kojih nema: " . join(', ', @missing) . $NL;
+}
+print "slike: sve trazene postoje" . $NL;
