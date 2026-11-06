@@ -36,9 +36,11 @@ my $n = 0;
 for my $sec (@secs) {
   $n++;
   my $stitle = 'helpSec' . $n . 'Title';
-  # Zvjezdica se NE stavlja u bocni meni — na duzim prevodima se prelije van
-  # okvira. Puna oznaka stoji u zaglavlju same sekcije.
-  my $sb = '';
+  # Zvjezdica u bocnom meniju je NAMJERNA — oznacava Premium sekciju. Korisnik
+  # je 2026 svjesno vratio JEDNU zvjezdicu u meni (komit 157193d), dok u
+  # zaglavlju sekcije stoji punih pet. Ne uklanjati. Prelivanje na duzim
+  # prevodima rijeseno je sa flex-wrap u .sidebar-link.
+  my $sb = $sec->{star} ? ' <span class="premium-note">' . chr(0x2B50) . '</span>' : '';
   push @side, '      <a class="sidebar-link" href="#' . $sec->{id} . '"><span>' . $sec->{emoji} . '</span> <span data-i18n="' . $stitle . '">' . en_of($stitle) . '</span>' . $sb . '</a>';
 
   my @items; my $i = 0;

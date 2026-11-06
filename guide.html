@@ -111,10 +111,10 @@
       display: flex; align-items: center; gap: 8px;
       padding: 7px 10px; border-radius: 8px; text-decoration: none;
       font-size: 13px; color: var(--text-muted); transition: background .1s, color .1s;
-      white-space: nowrap;
+      flex-wrap: wrap;
     }
     .sidebar-link:hover, .sidebar-link.active { background: var(--bg-alt); color: var(--primary); }
-    .sidebar-link span { font-size: 16px; }
+    .sidebar-link > span:first-child { font-size: 16px; }
 
     /* CONTENT */
     .guide-section {
@@ -261,7 +261,7 @@
       <a class="sidebar-link" href="#s2"><span>📋</span> <span data-i18n="helpSec2Title">Service Records</span></a>
       <a class="sidebar-link" href="#s3"><span>➕</span> <span data-i18n="helpSec3Title">Booking a Service</span></a>
       <a class="sidebar-link" href="#s4"><span>🔄</span> <span data-i18n="helpSec4Title">Statuses and Cancellation</span></a>
-      <a class="sidebar-link" href="#s5"><span>🧾</span> <span data-i18n="helpSec5Title">Premium Service Details</span></a>
+      <a class="sidebar-link" href="#s5"><span>🧾</span> <span data-i18n="helpSec5Title">Premium Service Details</span> <span class="premium-note">⭐</span></a>
       <a class="sidebar-link" href="#s6"><span>👥</span> <span data-i18n="helpSec6Title">Clients</span></a>
       <a class="sidebar-link" href="#s7"><span>📅</span> <span data-i18n="helpSec7Title">Calendar</span></a>
       <a class="sidebar-link" href="#s8"><span>🔔</span> <span data-i18n="helpSec8Title">Reminders</span></a>

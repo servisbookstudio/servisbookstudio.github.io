@@ -111,10 +111,10 @@
       display: flex; align-items: center; gap: 8px;
       padding: 7px 10px; border-radius: 8px; text-decoration: none;
       font-size: 13px; color: var(--text-muted); transition: background .1s, color .1s;
-      white-space: nowrap;
+      flex-wrap: wrap;
     }
     .sidebar-link:hover, .sidebar-link.active { background: var(--bg-alt); color: var(--primary); }
-    .sidebar-link span { font-size: 16px; }
+    .sidebar-link > span:first-child { font-size: 16px; }
 
     /* CONTENT */
     .guide-section {
