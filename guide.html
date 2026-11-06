@@ -59,7 +59,7 @@
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
     .nav-logo span { font-weight: 700; font-size: 17px; color: var(--primary); }
-    .nav-back { font-size: 14px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .nav-back { font-size: 14px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
     .nav-back:hover { color: var(--primary); }
     .nav-right { display: flex; align-items: center; gap: 8px; }
     .theme-btn {
@@ -143,8 +143,10 @@
 
     /* Screenshot in guide */
     .guide-screenshot {
-      float: right; margin: 0 0 16px 20px;
-      width: 140px; border-radius: 16px;
+      /* Phones first: full width above the text. Floating it beside the text
+         left the text about 158px wide on a 432px phone - three words a line. */
+      float: none; width: 100%; max-width: 300px; margin: 0 auto 20px;
+      border-radius: 16px;
       border: 2px solid var(--border); overflow: hidden;
       box-shadow: var(--shadow);
     }
@@ -182,6 +184,20 @@
     .no-results { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 15px; }
 
     /* RESPONSIVE */
+    /* Touch devices, and any narrow window: the bar's controls were 32px and
+       34px tall - too small for a finger. A mouse pointer is left alone. */
+    @media (pointer: coarse), (max-width: 699px) {
+      .nav-logo { min-height: 44px; }
+      .theme-btn { width: 44px; height: 44px; }
+    }
+    @media (max-width: 699px) {
+      /* No room beside the logo, language and theme buttons; on a Pixel 8a it
+         wrapped onto two lines inside a 60px bar. The logo already links home. */
+      .nav-back { display: none; }
+    }
+    @media (min-width: 700px) {
+      .guide-screenshot { float: right; width: 140px; margin: 0 0 16px 20px; }
+    }
     @media (min-width: 900px) {
       .guide-layout { grid-template-columns: 285px 1fr; }
       .sidebar { display: block; }
@@ -210,6 +226,13 @@
     .lang-option:hover { background: var(--bg-alt); }
     .lang-option.active { color: var(--primary); font-weight: 600; }
 
+
+    /* Touch devices, and any narrow window: a finger needs about 44px.
+       The button measured 79x29 and the dropdown rows about 36px. */
+    @media (pointer: coarse), (max-width: 699px) {
+      .lang-btn { min-height: 44px; padding: 5px 12px; }
+      .lang-option { min-height: 44px; padding: 11px 14px; }
+    }
 
   </style>
 </head>

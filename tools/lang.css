@@ -19,3 +19,10 @@
     .lang-option:hover { background: var(--bg-alt); }
     .lang-option.active { color: var(--primary); font-weight: 600; }
 
+
+    /* Touch devices, and any narrow window: a finger needs about 44px.
+       The button measured 79x29 and the dropdown rows about 36px. */
+    @media (pointer: coarse), (max-width: 699px) {
+      .lang-btn { min-height: 44px; padding: 5px 12px; }
+      .lang-option { min-height: 44px; padding: 11px 14px; }
+    }
