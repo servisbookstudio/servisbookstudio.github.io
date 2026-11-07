@@ -1054,15 +1054,49 @@ document.querySelectorAll('.lang-option').forEach(o => {
   o.addEventListener('click', () => { applyLang(o.dataset.lang); langDrop.classList.remove('open'); });
 });
 
+// Overlays and the phone's back button. An open overlay has to close on back
+// instead of sending the visitor off the page - that used to land them on the
+// guide. Only one overlay is open at a time, so one history entry serves all.
+let _ovClose = null;              // what the pushed entry closes, if anything
+function overlayOpen(close) {
+  if (_ovClose) { const prev = _ovClose; _ovClose = close; prev(); return; }
+  try { history.pushState({ sbOverlay: 1 }, ''); _ovClose = close; } catch (_) { _ovClose = null; }
+}
+function overlayBack() {          // true when popstate will do the closing
+  if (!_ovClose) return false;
+  history.back();
+  return true;
+}
+window.addEventListener('popstate', () => {
+  const close = _ovClose; _ovClose = null;
+  if (close) close();
+});
+
 // Hamburger
 const ham = document.getElementById('hamburger');
 const mobileNav = document.getElementById('mobile-nav');
+function hideNav() { ham.classList.remove('open'); mobileNav.classList.remove('open'); }
 ham.addEventListener('click', () => {
-  ham.classList.toggle('open');
-  mobileNav.classList.toggle('open');
+  if (mobileNav.classList.contains('open')) { if (!overlayBack()) hideNav(); return; }
+  ham.classList.add('open');
+  mobileNav.classList.add('open');
+  overlayOpen(hideNav);
 });
-mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  ham.classList.remove('open'); mobileNav.classList.remove('open');
+mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', e => {
+  hideNav();
+  if (!_ovClose) return;
+  // The link would push its own entry on top of the menu's, leaving one back
+  // press that does nothing. Put the target into the menu's entry instead.
+  e.preventDefault();
+  const href = a.getAttribute('href');
+  _ovClose = null;
+  if (href.charAt(0) === '#') {
+    history.replaceState(null, '', href);
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView();
+  } else {
+    location.replace(href);
+  }
 }));
 
 // Theme toggle
@@ -1130,10 +1164,15 @@ gallery.addEventListener('pointerup', e => {
   lightboxImg.alt = img.alt;
   lightbox.classList.add('open');
   document.body.style.overflow = 'hidden';
+  overlayOpen(hideLightbox);
 });
-function closeLightbox() {
+function hideLightbox() {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
+}
+function closeLightbox() {
+  if (!lightbox.classList.contains('open')) return;
+  if (!overlayBack()) hideLightbox();
 }
 lightboxClose.addEventListener('click', closeLightbox);
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
